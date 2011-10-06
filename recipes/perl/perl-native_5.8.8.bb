@@ -20,6 +20,7 @@ SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 S = "${WORKDIR}/perl-${PV}"
 
 inherit native
+export LD="${CCLD}"
 
 do_configure () {
     ./Configure \
