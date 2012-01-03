@@ -13,6 +13,7 @@ PYTHON_MAJMIN = "2.6"
 inherit autotools
 
 EXTRA_OECONF = "\
+  --with-zlib \
   --with-threads \
   --with-pymalloc \
   --with-cyclic-gc \
