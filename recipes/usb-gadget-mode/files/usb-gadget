@@ -37,7 +37,13 @@ setup_usb() {
 	then
 		unload_usb_gadgets
 		echo "Loading [$1]"
+		# ROMAIN: we must initialize the musb controller to peripheral with mode_default
+		modprobe musb_hdrc use_dma=0 mode_default=2
 		modprobe "$1" "$MODULE_OPTIONS"
+
+		if [ "$1" = "g_ether" ]; then
+			ifup usb0
+		fi
 	else
 		echo "Already loaded: [$1]"
 	fi
@@ -57,6 +63,8 @@ unload_usb_gadgets() {
 			rmmod "$module"
 		fi
 	done
+
+	rmmod musb_hdrc
 }
 
 go
