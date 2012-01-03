@@ -5,9 +5,9 @@ LICENSE = "GPL"
 CONFLICTS = "ipkg-link"
 RDEPENDS = "python"
 SRCDATE = "20050404"
-PR = "r23"
+PR = "r24"
 
-SRC_URI = "${HANDHELDS_CVS};module=ipkg-utils \
+SRC_URI = "file://ipkg-utils_anoncvs.handhelds.org__20050930.tar.gz \
            file://ipkg-utils-fix.patch;patch=1 \
            file://ipkg-py-sane-vercompare.patch;patch=1 \
            file://ipkg-py-tarfile.patch;patch=1 \

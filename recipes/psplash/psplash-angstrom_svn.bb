@@ -9,7 +9,7 @@ ALTERNATIVE_PRIORITY = "20"
 # respectively psplash-bar-img.h (BAR) for the bar.
 # You might also want to patch the colors (see patch)
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=psplash;proto=http \
+SRC_URI = "file://psplash_svn.o-hand.com_.repos.misc.trunk_249_.tar.gz \
           file://logo-math.patch;patch=1 \
           file://psplash-hand-img.h \
           file://psplash-bar-img.h \

@@ -5,13 +5,17 @@ SECTION = "x11/utils"
 PROVIDES = "gconf"
 RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
-PV = "2.16.0+svnr${SRCREV}"
-PR = "r0"
+PV = "705"
+PR = "r1"
 
 inherit autotools pkgconfig
 
-SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
+SRC_URI = "http://autobuilder.pokylinux.org/sources/trunk_developer.imendio.com_.svn.gconf-dbus_705_.tar.gz \
 	file://69gconfd-dbus"
+
+SRC_URI[md5sum] = "dba8d534b0c6262d24817c842b36369d"
+SRC_URI[sha256sum] = "5552b1884d42d4072a199c93e35a28dc1799f9166baefbf9243394966039e416"
+
 S = "${WORKDIR}/trunk"
 
 PARALLEL_MAKE = ""

@@ -2,11 +2,10 @@ SECTION = "base"
 PRIORITY = "standard"
 DESCRIPTION = "Manage symlinks in /etc/rcN.d"
 LICENSE = "GPL"
-S = "${WORKDIR}/update-rc.d"
-PR = "r1"
+S = "${WORKDIR}"
+PR = "r3"
 
-SRC_URI = "${HANDHELDS_CVS};module=apps/update-rc.d;tag=r0_7 \
-           file://add-verbose.patch;patch=1"
+SRC_URI = "file://update-rc.d"
 
 PACKAGE_ARCH = "all"
 
