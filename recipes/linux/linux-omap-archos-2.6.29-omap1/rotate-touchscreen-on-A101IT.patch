@@ -1,0 +1,110 @@
+diff -rupN linux-omap-archos-2.6.29-omap1.orig/arch/arm/mach-omap2/archos-usb-touchscreen.c linux-omap-archos-2.6.29-omap1/arch/arm/mach-omap2/archos-usb-touchscreen.c
+--- linux-omap-archos-2.6.29-omap1.orig/arch/arm/mach-omap2/archos-usb-touchscreen.c	2010-09-27 16:33:52.000000000 +0000
++++ linux-omap-archos-2.6.29-omap1/arch/arm/mach-omap2/archos-usb-touchscreen.c	2010-12-10 09:21:54.000000000 +0000
+@@ -114,6 +114,11 @@ static int __init archos_usb_tsp_init(vo
+ 	tsp_platform_data.x_offset = conf->x_offset;
+ 	tsp_platform_data.y_scale = conf->y_scale;
+ 	tsp_platform_data.y_offset = conf->y_offset;
++	if (machine_is_archos_a101it() && hardware_rev > 2) {
++		tsp_platform_data.rotate270 = 1;
++	} else {
++		tsp_platform_data.rotate270 = 0;
++	}
+ 	
+ 	ret = platform_device_register(&usb_tsp_device);
+ 	if (ret < 0)
+diff -rupN linux-omap-archos-2.6.29-omap1.orig/arch/arm/plat-omap/include/mach/board-archos.h linux-omap-archos-2.6.29-omap1/arch/arm/plat-omap/include/mach/board-archos.h
+--- linux-omap-archos-2.6.29-omap1.orig/arch/arm/plat-omap/include/mach/board-archos.h	2010-11-24 14:57:36.000000000 +0000
++++ linux-omap-archos-2.6.29-omap1/arch/arm/plat-omap/include/mach/board-archos.h	2010-12-10 09:20:11.000000000 +0000
+@@ -433,6 +433,7 @@ struct usb_tsp_platform_data {
+ 	void (*panel_power)(int on_off);
+ 	int x_scale, x_offset;
+ 	int y_scale, y_offset;
++	int rotate270;
+ };
+ 
+ struct archos_supply5V_conf
+diff -rupN linux-omap-archos-2.6.29-omap1.orig/drivers/hid/hid-hanvon.c linux-omap-archos-2.6.29-omap1/drivers/hid/hid-hanvon.c
+--- linux-omap-archos-2.6.29-omap1.orig/drivers/hid/hid-hanvon.c	2010-11-18 10:41:45.000000000 +0000
++++ linux-omap-archos-2.6.29-omap1/drivers/hid/hid-hanvon.c	2010-12-10 09:20:11.000000000 +0000
+@@ -89,6 +89,7 @@ static unsigned long usb_tsp_flags;
+ 
+ static int x_scale, x_offset;
+ static int y_scale, y_offset;
++static int rotate270;
+ 
+ enum hrtimer_restart pointer_timer_callback( struct hrtimer *timer_handle )
+ {
+@@ -101,8 +102,13 @@ enum hrtimer_restart pointer_timer_callb
+ 
+ 			// issue a release.
+ 			input_event(td->dev, EV_ABS, ABS_MT_TRACKING_ID, p->data.id);
+-			input_event(td->dev, EV_ABS, ABS_MT_POSITION_X, p->data.x);
+-			input_event(td->dev, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++			if (rotate270) {
++				input_event(td->dev, EV_ABS, ABS_MT_POSITION_X, td->dev->absmax[ABS_X] - p->data.x);
++				input_event(td->dev, EV_ABS, ABS_MT_POSITION_Y, td->dev->absmax[ABS_Y] - p->data.y);
++			} else {
++				input_event(td->dev, EV_ABS, ABS_MT_POSITION_X, p->data.x);
++				input_event(td->dev, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++			}
+ 			input_event(td->dev, EV_ABS, ABS_MT_TOUCH_MAJOR, 0);
+ 
+ 			input_mt_sync(td->dev);
+@@ -252,8 +258,13 @@ static void hanvon_filter_event(struct h
+ 			if (p->data.z) {
+ 				// issue mt position
+ 				input_event(input, EV_ABS, ABS_MT_TRACKING_ID, p->data.id);
+-				input_event(input, EV_ABS, ABS_MT_POSITION_X, p->data.x);
+-				input_event(input, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++				if (rotate270) {
++					input_event(input, EV_ABS, ABS_MT_POSITION_X, td->dev->absmax[ABS_X] - p->data.x);
++					input_event(input, EV_ABS, ABS_MT_POSITION_Y, td->dev->absmax[ABS_Y] - p->data.y);
++				} else {
++					input_event(input, EV_ABS, ABS_MT_POSITION_X, p->data.x);
++					input_event(input, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++				}
+ 				input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, p->data.z);
+ 
+ 				// and mt sync 
+@@ -261,8 +272,13 @@ static void hanvon_filter_event(struct h
+ 
+ #ifdef CONFIG_HID_HANVON_10_MONO_TSP_EMULATION
+ 				// issue position
+-				input_event(input, EV_ABS, ABS_X, p->data.x);
+-				input_event(input, EV_ABS, ABS_Y, p->data.y);
++				if (rotate270) {
++					input_event(input, EV_ABS, ABS_X, td->dev->absmax[ABS_X] - p->data.x);
++					input_event(input, EV_ABS, ABS_Y, td->dev->absmax[ABS_Y] - p->data.y);
++				} else {
++					input_event(input, EV_ABS, ABS_X, p->data.x);
++					input_event(input, EV_ABS, ABS_Y, p->data.y);
++				}
+ 				input_event(input, EV_ABS, ABS_PRESSURE, p->data.z);
+ 
+ 				// and sync
+@@ -289,8 +305,13 @@ static void hanvon_filter_event(struct h
+ 	
+ 			// issue release
+ 			input_event(input, EV_ABS, ABS_MT_TRACKING_ID, p->data.id);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_X, p->data.x);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++			if (rotate270) {
++				input_event(input, EV_ABS, ABS_MT_POSITION_X, td->dev->absmax[ABS_X] - p->data.x);
++				input_event(input, EV_ABS, ABS_MT_POSITION_Y, td->dev->absmax[ABS_Y] - p->data.y);
++			} else {
++				input_event(input, EV_ABS, ABS_MT_POSITION_X, p->data.x);
++				input_event(input, EV_ABS, ABS_MT_POSITION_Y, p->data.y);
++			}
+ 			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, p->data.z);
+ 			input_mt_sync(input);
+ 
+@@ -645,6 +666,8 @@ static int hanvon_platform_probe(struct 
+ 
+ 	y_offset = pdata->y_offset;
+ 	y_scale = pdata->y_scale;
++
++	rotate270 = pdata->rotate270;
+ 	
+ 	return hid_register_driver(&hanvon_driver);
+ }
