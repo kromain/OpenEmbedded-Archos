@@ -1,4 +1,21 @@
-This is the OpenEmbedded packages metadata repository.
+####################################
+# ARCHOS Special Developer Edition #
+####################################
 
-See http://openembedded.org
 
+This package contains:
+- The overlay which should be added to the OpenEmbedded tree in order to build the Developer Edition kernel, initramfs and rootfs.
+- A patch fixing some OpenEmbedded build issues, which has to be apply on top of the OpenEmbedded tree.
+
+
+NOTES:
+Please note that this overlay includes what is needed to build the Developer Edition for Generation 8 Archos devices, Archos5 IMT and Archos5 IT.
+If you want to build the Archos5 IMT Developer Edition, you will have to edit "distro/angstrom-2008.1.conf" and uncomment "#KERNEL_CCSUFFIX_armv7a" (line 109) in order to build the 2.6.22 kernel successfully.
+This Developer Edition is based on a checkout of OpenEmbedded "stable/2009" from December 2009.
+
+
+You may find some useful information here:
+- http://www.angstrom-distribution.org/building-angstrom
+- http://wiki.openembedded.net/index.php/Main_Page
+- http://www.pokylinux.org/releases/pinky-3.1/doc/poky-handbook.html
+- http://www.openaos.org/

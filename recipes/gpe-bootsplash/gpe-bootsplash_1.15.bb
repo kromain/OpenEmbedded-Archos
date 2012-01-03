@@ -8,7 +8,8 @@ PR = "r9"
 
 SRC_URI += "file://splash-p.svg \
 	    file://splash-l.svg \
-	    file://init.patch;patch=1"
+	    file://init.patch;patch=1 \
+	    file://fix-install.patch;patch=1"
 
 FILES_${PN} += "${datadir}/gpe"
 

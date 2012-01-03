@@ -40,6 +40,10 @@ do_stage() {
 	install -m 0644 generic/tcl.h ${STAGING_INCDIR}
 	install -m 0644 generic/tclDecls.h ${STAGING_INCDIR}
 	install -m 0644 generic/tclPlatDecls.h ${STAGING_INCDIR}
+	install -m 0644 generic/tclInt.h ${STAGING_INCDIR}
+	install -m 0644 generic/tclIntDecls.h ${STAGING_INCDIR}
+	install -m 0644 generic/tclIntPlatDecls.h ${STAGING_INCDIR}
+	install -m 0644 generic/tclMath.h ${STAGING_INCDIR}
 }
 
 do_install() {
