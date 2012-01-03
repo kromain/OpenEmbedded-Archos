@@ -1,42 +1,24 @@
-DESCRIPTION = "Code Generation Tools for TI DaVinci and OMAP"
+DESCRIPTION = "TI DSP Code Generation Tools"
+HOMEPAGE = "https://www-a.ti.com/downloads/sds_support/TICodegenerationTools/download.htm"
+SECTION = "devel"
+LICENSE = "TI"
 
-# This file defines function used for extracting .bin file
+require ti-paths.inc
+require ti-staging.inc
+require ti-eula-unpack.inc
 
-python do_unpack () {
-    bb.build.exec_func('base_do_unpack', d)
-    bb.build.exec_func('ti_bin_do_unpack', d)
-}
+PR = "r4"
 
-python ti_bin_do_unpack() {
+S = "${WORKDIR}/cgt6x_${PV}"
 
-    import os
+SRC_URI = "http://install.source.dir.local/ti_cgt_c6000_${PVwithdots}_setup_linux_x86.bin;name=cgt6xbin"
 
-    localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
+BINFILE="ti_cgt_c6000_${PVwithdots}_setup_linux_x86.bin"
+TI_BIN_UNPK_CMDS="Y:qY:workdir: : "
+TI_BIN_UNPK_WDEXT="/cgt6x_${PV}"
 
-    binfile  = bb.data.getVar('BINFILE', localdata)
-
-    # Change to the working directory
-    save_cwd = os.getcwd()
-    workdir  = bb.data.getVar('WORKDIR', localdata)
-    workdir  = bb.data.expand(workdir, localdata)
-    os.chdir(workdir)
-
-    # Make the InstallJammer binary executable so we can run it
-    os.chmod(binfile, 0755)
-
-    # Run the InstallJammer binary and accept the EULA
-    filename = "HOME=%s ./%s" % (workdir, binfile)
-    f = os.popen(filename,'w')
-    print >>f, "Y\n"
-    print >>f, "qY\n"
-    print >>f, "%s/cgt\n" % workdir
-    print >>f, " \n"
-    print >>f, " \n"
-
-    f.close()
-
-    # Return to the previous directory
-    os.chdir(save_cwd)
+do_install() {
+    install -d ${D}${CODEGEN_INSTALL_DIR_RECIPE}
+    cp -pPrf ${S}/* ${D}${CODEGEN_INSTALL_DIR_RECIPE}
 }
 

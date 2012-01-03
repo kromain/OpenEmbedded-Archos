@@ -1,17 +1,32 @@
 #!/bin/sh
+PATH=$PATH:/usr/sbin
 
 CPUTYPE="$(cputype)"
 
-if [ $CPUTYPE = "OMAP3530" ]; then
+if [ "$1" = "" ]; then
+	echo PVR-INIT: Please use start, stop, or restart.
+	exit 1
+fi
 
-	rmmod omaplfb
-	rmmod pvrsrvkm
+if [ "$1" = "stop" -o  "$1" = "restart" ]; then
+	echo Stopping PVR
+	rmmod bufferclass_ti
+	rmmod omaplfb 2>/dev/null
+	rmmod pvrsrvkm 2>/dev/null
+fi
 
-	insmod $(busybox find /lib/modules/$(uname -r) -name "pvrsrvkm.ko")
+if [ "$1" = "stop" ]; then
+	exit 0
+fi
 
+sgxprepare () {
+	echo Starting PVR
+	modprobe pvrsrvkm
 	modprobe omaplfb
+	modprobe bufferclass_ti
 
 	pvr_maj=`grep "pvrsrvkm$" /proc/devices | cut -b1,2,3`
+        bc_maj=`grep "bc" /proc/devices | cut -b1,2,3`
 
 	if [ -e /dev/pvrsrvkm ] ; then 
 		rm -f /dev/pvrsrvkm
@@ -20,11 +35,50 @@ if [ $CPUTYPE = "OMAP3530" ]; then
 	mknod /dev/pvrsrvkm c $pvr_maj 0 
 	chmod 666 /dev/pvrsrvkm
 
-	/usr/bin/pvrsrvinit
+	touch /etc/powervr-esrev
 
-	# Set SGX to full speed
-	devmem2 0x48004b40 w 0
-else
-	echo No SGX hardware, not starting pvrsinit
-fi
+	SAVED_ESREVISION="$(cat /etc/powervr-esrev)"
+}
+
+sgxfinish () {
+	if [ "${ES_REVISION}" != "${SAVED_ESREVISION}" ] ; then
+		echo -n "Starting SGX fixup for"
+		echo " ES${ES_REVISION}.x"
+		cp -a /usr/lib/ES${ES_REVISION}.0/* /usr/lib
+		cp -a /usr/bin/ES${ES_REVISION}.0/* /usr/bin	
+		echo "${ES_REVISION}" > /etc/powervr-esrev
+	fi
+	/usr/bin/pvrsrvinit
+}
+
+case $CPUTYPE in
+"OMAP3530")
+	sgxprepare
+
+	devmem2 0x48004B48 w 0x2 > /dev/null
+	devmem2 0x48004B10 w 0x1 > /dev/null
+	devmem2 0x48004B00 w 0x2 > /dev/null
+
+	# Romain: broken for the Archos tablet, but we know we have a SGX revision ES5.0 onboard
+	#ES_REVISION="$(devmem2 0x50000014 | sed -e s:0x00010205:5: -e s:0x00010201:3: -e s:0x00010003:2: | tail -n1 | awk -F': ' '{print $2}')"
+	ES_REVISION=5
+
+	sgxfinish
+	;;
+"TI816x")
+	sgxprepare
+
+	devmem2 0x48180F04 w 0x0 > /dev/null
+	devmem2 0x48180900 w 0x2 > /dev/null
+	devmem2 0x48180920 w 0x2 > /dev/null
+
+	ES_REVISION="$(devmem2 0x56000014 | sed -e s:0x00010205:6: -e s:0x00010201:3: -e s:0x00010003:2: | tail -n1 | awk -F': ' '{print $2}')"
+
+	sgxfinish
+	;;
+*)
+	echo No SGX hardware, not starting PVR
+	;;
+esac
+
 

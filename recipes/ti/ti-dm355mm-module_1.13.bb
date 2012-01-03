@@ -1,24 +1,24 @@
 DESCRIPTION = "User space DMA module for DM355"
+SECTION = "devel"
+LICENSE = "GPLv2"
 
-require ti-codec-combo-dm355.inc
+require ti-paths.inc
+require ti-staging.inc
+require ti-eula-unpack.inc
+
 inherit module
 
-# compile and run time dependencies
-DEPENDS 	= "virtual/kernel perl-native"
-RDEPENDS 	= "update-modules"
+PV = "1_13_000"
 
-SRC_URI	= "http://software-dl.ti.com/dsps/dsps_public_sw/sdo_sb/targetcontent/dvsdk/codecs/dm355_codecs_setuplinux_1_13_000.bin \
-		   file://dm355mm_1_30.patch;patch=1 \
+SRC_URI	= "http://software-dl.ti.com/dsps/dsps_public_sw/sdo_sb/targetcontent/dvsdk/codecs/dm355_codecs_setuplinux_${PV}.bin \
+		   file://dm355mm.patch \
 	      "
+S = "${WORKDIR}/dm355_codecs_${PV}"
+BINFILE="dm355_codecs_setuplinux_${PV}.bin"
+TI_BIN_UNPK_CMDS = "y:Y: qY:workdir"
 
-S = "${WORKDIR}/dm355_codecs_1_13_000"
-BINFILE = "dm355_codecs_setuplinux_1_13_000.bin"
-
-# Yes, the xdc stuff still breaks with a '.' in PWD
-PV = "113"
 #This is a kernel module, don't set PR directly
-MACHINE_KERNEL_PR_append = "a"
-
+MACHINE_KERNEL_PR_append = "b"
 
 do_configure() {
 	find ${S} -name "*.ko" -exec rm {} \; || true
@@ -39,19 +39,7 @@ do_install () {
     install -m 0755 ${S}/dm355mm/module/dm350mmap.ko ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/dsp
 }
 
-pkg_postinst () {
-    if [ -n "$D" ]; then        
-                exit 1
-        fi
-        depmod -a
-        update-modules || true
-}
+PACKAGE_STRIP = "no"
 
-pkg_postrm () {
-        update-modules || true
-}
-
-INHIBIT_PACKAGE_STRIP = "1"
-FILES_${PN} = "/lib/modules/${KERNEL_VERSION}/kernel/drivers/dsp/dm350mmap.ko"
-
-
+SRC_URI[md5sum] = "f6221188bea76b7aaf0c45e9bcf26329"
+SRC_URI[sha256sum] = "f1a6dea51be9798903a0543fb50f463b0594b1f11b897bc50e40825fb7527c61"

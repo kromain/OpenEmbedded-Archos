@@ -1,83 +1,34 @@
-DESCRIPTION = "Gstreamer plugin for TI Davinci and OMAP processors"
+require gstreamer-ti.inc
 
-require ti-paths.inc
-
-inherit autotools
-
-DEPENDS = "ti-dmai gstreamer gst-plugins-base gst-plugins-good gst-plugins-ugly"
-
-# Fetch source from svn repo
-SRCREV = "407"
-SRC_URI = "svn://gforge.ti.com/svn/gstreamer_ti/trunk;module=gstreamer_ti;proto=https;user=anonymous;pswd='' \
-           file://gstreamer-ti-tracker-462.patch;patch=1 \
-           file://gstreamer-ti-remove-mp3-decode-support-from-auddec1.patch;patch=1 \
-"
-
-SRC_URI_append_armv7a = " \
-           file://gstreamer-ti-add-omapfb.patch;patch=1 \
-"
-
-# Again, no '.' in PWD allowed :(
-PR = "r37"
 PV = "svnr${SRCREV}"
 
 S = "${WORKDIR}/gstreamer_ti/ti_build/ticodecplugin"
 
-XDC_TARGET  				= gnu.targets.arm.GCArmv5T
-XDC_PLATFORM_dm355-evm 		= ti.platforms.evmDM355
-XDC_PLATFORM_dm6446-evm 	= ti.platforms.evmDM6446
-XDC_PLATFORM_da830-omapl137-evm 	= ti.platforms.omapl137
-PLATFORM_XDC				= ${XDC_PLATFORM}
+SRCREV = "822"
 
-export XDC_TARGET
-export XDC_PLATFORM
-export PLATFORM_XDC 
+# apply patches from tracker 1208 to get zero copy support.
+# https://gstreamer.ti.com/gf/project/gstreamer_ti/tracker/?action=TrackerItemEdit&tracker_item_id=1208&start=175
 
-PLATFORM_dm355-evm 			= "dm355"
-PLATFORM_dm6446-evm 		= "dm6446"
-PLATFORM_da830-omapl137-evm = "ol137"
+SRC_URI = "svn://gforge.ti.com/svn/gstreamer_ti/trunk;module=gstreamer_ti;proto=https;user=anonymous;pswd='' \
+file://gstreamer-ti-rc.sh \
+file://0003-Support-setting-the-display-framerate-directly-when-.patch;striplevel=4 \
+file://0004-Cosmetic-cleanup-clarify-some-comments.patch;striplevel=4 \
+file://0005-Enable-setting-the-framerate-directly-on-DM365.patch;striplevel=4 \
+file://0006-Remove-the-repeat_with_refresh-feature.patch;striplevel=4 \
+file://0007-Add-support-for-pad-allocated-buffers-in-TIDmaiVideo.patch;striplevel=4 \
+file://0008-Add-support-for-pad-allocated-buffers-in-TIViddec2.patch;striplevel=4 \
+file://0009-update-dm365-cfg-to-work-with-platinum-codecs.patch \
+file://0010-replace-omap3530_dv400-platform-support-with-omap353.patch \
+"
 
-CPPFLAGS_append 			= " -DPlatform_${PLATFORM}"
+# use local loadmodules.sh for these platform
+# TODO: must be removed onces these loadmodules goes in gstreamer.ti.com
+SRC_URI_append_dm365 = " file://loadmodules.sh"
+SRC_URI_append_omapl137 = " file://loadmodules.sh"
+SRC_URI_append_omapl138 = " file://loadmodules.sh "
+SRC_URI_append_omap3 = " file://loadmodules.sh "
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-# export codec combo (or server) locations
-export HMJCP_COMBO  = "${installdir}/codec-combo/hmjcp.accel"
-export CODEC_SERVER = "${installdir}/codec-combo/cs.x64P"
-export ENCODE_COMBO = "${installdir}/codec-combo/encodeCombo.x64P" 
-export DECODE_COMBO = "${installdir}/codec-combo/decodeCombo.x64P"
-
-do_install_prepend () {
-	# install gstreamer demo scripts
-	install -d ${D}/${installdir}/gst
-	cp -r ${WORKDIR}/gstreamer_ti/gstreamer_demo/shared ${D}/${installdir}/gst
-	cp -r ${WORKDIR}/gstreamer_ti/gstreamer_demo/${PLATFORM} ${D}/${installdir}/gst
-
-	# default loadmodule script is hard-coded for insmod, change to modprobe
-	sed -i 's/insmod/modprobe/g' ${D}/${installdir}/gst/${PLATFORM}/loadmodules.sh
-	sed -i 's/.ko//g' ${D}/${installdir}/gst/${PLATFORM}/loadmodules.sh
-	if [ "${PLATFORM}" = "omap3530" ]; then
-		echo "modprobe sdmak" >> ${D}/${installdir}/gst/${PLATFORM}/loadmodules.sh
-	fi
-	chmod 0755 ${D}/${installdir}/gst -R
-}
-
-pkg_postinst_gstreamer-ti-demo-script () {
-	ln -sf ${installdir}/codec-combo/* ${installdir}/gst/${PLATFORM}/
-}
-
-PACKAGES += "gstreamer-ti-demo-script"
-FILES_gstreamer-ti-demo-script = "${installdir}/gst/*"
-RDEPENDS_gstreamer-ti-demo-script = "gstreamer-ti"
-
-RDEPENDS_${PN} = " \
-gst-plugins-base-meta \
-gst-plugins-good-meta \
-gst-plugins-bad-meta \
-gst-plugins-ugly-meta \
-ti-dmai-apps"
-
-FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"
-FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.a ${libdir}/gstreamer-0.10/*.la"
-FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug"
+# apply omapdmaifbsink patch on omap3 platform
+# NOTE: this patch need's X11 header/libs
+SRC_URI_append_omap3 = " file://0001-add-omapdmaifbsink.patch"
 
