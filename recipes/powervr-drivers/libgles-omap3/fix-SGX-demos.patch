@@ -1,0 +1,68 @@
+diff -r -u Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/LinuxGeneric/make_demo.mak Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/LinuxGeneric/make_demo.mak
+--- Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/LinuxGeneric/make_demo.mak	2011-03-08 06:27:37.000000000 -0600
++++ Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/LinuxGeneric/make_demo.mak	2012-01-03 02:07:40.189710975 -0600
+@@ -52,6 +52,8 @@
+ FILEWRAP_PATH=../../../Utilities/Filewrap/Linux/Filewrap
+ endif
+ 
++PLAT_CFLAGS += -DPVRSHELL_FPS_OUTPUT
++
+ ifdef CommonLite
+ PLAT_CFLAGS += -DPVRT_FIXED_POINT_ENABLE
+ endif
+diff -r -u Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp
+--- Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp	2011-03-08 06:27:42.000000000 -0600
++++ Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp	2012-01-03 02:10:47.609711002 -0600
+@@ -148,6 +148,8 @@
+ 	}
+ #endif
+ 
++// Romain: Disabled, as it makes the demos crash on the Archos tablet
++#if 0
+     // Remote Control handling
+     if((remote_fd = open(REMOTE, O_RDONLY|O_NDELAY)) <= 0)
+ 	{
+@@ -166,6 +168,9 @@
+ 		tcflush(remote_fd, TCIFLUSH);
+ 		tcsetattr(remote_fd, TCSANOW, &remios);
+     }
++#else
++    remote_fd = 0;
++#endif
+ 
+ 
+ 
+diff -r -u Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/LinuxGeneric/make_demo.mak Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/LinuxGeneric/make_demo.mak
+--- Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/LinuxGeneric/make_demo.mak	2011-03-08 06:27:48.000000000 -0600
++++ Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/LinuxGeneric/make_demo.mak	2012-01-03 02:08:02.173710979 -0600
+@@ -39,6 +39,8 @@
+ FILEWRAP_PATH =  $(SDKDIR)/Utilities/Filewrap/Linux/Filewrap
+ UNISCO_PATH   =  $(SDKDIR)/Utilities/PVRUniSCo/OGLES/Linux/PVRUniSCo
+ 
++PLAT_CFLAGS += -DPVRSHELL_FPS_OUTPUT
++
+ #---------------------------------------------------------------------
+ 
+ all: $(PLAT_OBJPATH)/$(OUTNAME)
+diff -r -u Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES2/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES2/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp
+--- Graphics_SDK_4_03_00_02.orig//GFX_Linux_SDK/OGLES2/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp	2011-03-08 06:27:53.000000000 -0600
++++ Graphics_SDK_4_03_00_02/GFX_Linux_SDK/OGLES2/SDKPackage/Shell/OS/LinuxRaw/PVRShellOS.cpp	2012-01-03 02:09:45.121710994 -0600
+@@ -148,6 +148,8 @@
+ 	}
+ #endif
+ 
++// Romain: Disabled, as it makes the demos crash on the Archos tablet
++#if 0
+     // Remote Control handling
+     if((remote_fd = open(REMOTE, O_RDONLY|O_NDELAY)) <= 0)
+ 	{
+@@ -166,6 +168,9 @@
+ 		tcflush(remote_fd, TCIFLUSH);
+ 		tcsetattr(remote_fd, TCSANOW, &remios);
+     }
++#else
++    remote_fd = 0;
++#endif
+ 
+ 
+ 
