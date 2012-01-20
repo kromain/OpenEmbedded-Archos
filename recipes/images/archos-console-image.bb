@@ -17,6 +17,7 @@ IMAGE_INSTALL = "task-base-extended \
 	libgles-omap3 \
 # Development utilities
 	ldd \
+	gdb \
 	gdbserver \  
         "
 
