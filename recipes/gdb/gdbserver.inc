@@ -2,23 +2,23 @@ require gdb-common.inc
 
 DEFAULT_PREFERENCE_avr32 = "-99"
 
-DEPENDS = "ncurses readline"
-
 FILES_gdbserver = "${bindir}/gdbserver"
 
-RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
-RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
+RRECOMMENDS_gdb_append_libc-glibc = " glibc-thread-db "
+RRECOMMENDS_gdb_append_libc-uclibc = " uclibc-thread-db "
 
 inherit gettext
 
-SRC_URI += "file://kill_arm_map_symbols.patch;patch=1 \
-            file://gdbserver-cflags-last.diff;patch=1;pnum=0"
-#FIXME	   file://uclibc.patch;patch=1 \
+FILESPATHPKG =. "gdb-${PV}:"
 
-EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
+SRC_URI += "file://kill_arm_map_symbols.patch \
+            file://gdbserver-cflags-last.diff;striplevel=0"
+#FIXME	   file://uclibc.patch \
 
-EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
-                --with-curses --disable-multilib --with-readline --disable-sim \
+EXTRA_OEMAKE = "gdbserver"
+
+EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --without-curses \
+                --disable-multilib --without-readline --disable-sim \
                 --program-prefix=''"
 
 LDFLAGS_append = " -s"
