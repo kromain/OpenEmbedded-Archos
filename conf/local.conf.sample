@@ -158,5 +158,9 @@ BBINCLUDELOGS = "yes"
 # rather than installing as the full version and symlinking to the SONAME.
 # PACKAGE_SNAP_LIB_SYMLINKS = "1"
 
+# Avoid having to update checksums.ini everytime a new package or version is added.
+# Most packages provide their checksums directly in the recipe, which is much easier to maintain.
+OE_ALLOW_INSECURE_DOWNLOADS = "1"
+
 # EDIT THIS FILE and then remove the line below before using!
 REMOVE_THIS_LINE:="${@bb.fatal('Read the comments in your conf/local.conf')}"
