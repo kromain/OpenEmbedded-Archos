@@ -21,5 +21,7 @@ IMAGE_INSTALL = "task-base-extended \
 	gdbserver \  
         "
 
+IMAGE_EXTRA_SPACE = 65536
+
 export IMAGE_BASENAME = "archos-console-image"
 IMAGE_LINGUAS = ""
