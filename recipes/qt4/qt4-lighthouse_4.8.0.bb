@@ -13,13 +13,14 @@ QT_SRC_DIR = "/home/romain/dev/Qt/qt-4.8-src"
 
 QT_CONFIGURE_OPTIONS = " \
     -prefix /usr \
-    -release \
+    -debug \
+#    -release \
     -qpa \
     -arch arm \
-    -xplatform qws/linux-angstrom-gnueabi-g++ \
+    -xplatform qpa/linux-angstrom-gnueabi-g++ \
     -fast \
-    -webkit \
-#    -no-webkit \
+#    -webkit \
+    -no-webkit \
     -no-phonon \
     -no-qt3support \
     -no-feature-CURSOR \
@@ -65,5 +66,9 @@ do_stage() {
     rm -rf libQt*.la
     cd pkgconfig
     rm -rf Qt*.pc
+    rm -rf .debug
+}
+
+do_package() {
 }
 
