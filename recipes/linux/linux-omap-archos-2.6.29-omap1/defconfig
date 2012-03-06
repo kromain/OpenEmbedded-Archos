@@ -282,7 +282,7 @@ CONFIG_CMDLINE1="root=/dev/sda1 rw init=/sbin/init console=ttyS2,115200n8 debug 
 CONFIG_CMDLINE2="root=/dev/mmcblk1p1 rw init=/sbin/init console=ttyS1,115200n8 debug omapdss.debug=0 vram=921600 omapfb.vram=0:921600 omapfb.debug=0 mmc_block.split=0.0001:512M extrabaud=1000000 extrabaud_line=1"
 CONFIG_CMDLINE3="root=/dev/mmcblk1p1 rw init=/sbin/init console=ttyS1,115200n8 debug omapdss.debug=0 vram=1105920 omapfb.vram=0:1105920 omapfb.debug=0 mmc_block.split=0.0001:512M extrabaud=1000000 extrabaud_line=1"
 # ARCHOS 101IT BOOTARGS
-CONFIG_CMDLINE4="root=/dev/mmcblk1p1 rw init=/sbin/init console=ttyS2,115200n8 debug omapdss.debug=0 vram=10M omapfb.vram=0:10M omapfb.debug=0 omapfb.mode=lcd:1024x600MR-16@60 omapfb.vrfb=y omapfb.rotate=2 mmc_block.split=0.0001:512M extrabaud=1000000"
+CONFIG_CMDLINE4="root=/dev/mmcblk1p1 rw init=/sbin/init console=ttyS2,115200n8 debug omapdss.debug=0 vram=10M omapfb.vram=0:10M omapfb.debug=0 omapfb.mode=lcd:1024x600MR-16@60 omapfb.vrfb=y omapfb.rotate=2 mmc_block.split=0.0001:512M extrabaud=1000000 consoleblank=0"
 CONFIG_CMDLINE5="root=/dev/mmcblk1p1 rw init=/sbin/init console=ttyS2,115200n8 debug omapdss.debug=0 vram=1660000 omapfb.vram=0:1653120 omapfb.debug=0 mmc_block.split=0.0001:512M extrabaud=1000000"
 
 #
