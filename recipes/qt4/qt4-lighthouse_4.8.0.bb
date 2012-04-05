@@ -25,14 +25,26 @@ QT_CONFIGURE_OPTIONS = " \
     -no-qt3support \
     -no-feature-CURSOR \
     -confirm-license \
+    -nomake demos \
     -nomake examples \
+    -nomake docs \
+    -nomake translations \
     "
 
-FILES_${PN}     = "/usr/demos \
-		   /usr/imports \
-		   /usr/lib \
-		   /usr/plugins \
+FILES_${PN}     = "/usr/lib/*.so.* \
+		   /usr/plugins/*/*.so \
+		   /usr/imports/Qt/labs/*/*.so \
+		   /usr/imports/Qt/labs/*/qmldir \
+		   "
+FILES_${PN}-dev = "/usr/include \
+		   /usr/lib/*.so \
+		   /usr/lib/*.la \
+		   /usr/lib/pkgconfig \
                   "
+FILES_${PN}-dbg = "/usr/lib/*.debug \
+		   /usr/plugins/*/*.debug \
+		   /usr/imports/Qt/labs/*/*.debug \
+		   "
 
 do_configure() {
     unset QMAKESPEC
@@ -64,11 +76,5 @@ do_stage() {
     # Avoid annoying errors from some QA checker crap
     cd ${STAGING_LIBDIR}
     rm -rf libQt*.la
-    cd pkgconfig
-    rm -rf Qt*.pc
-    rm -rf .debug
+    rm -R pkgconfig
 }
-
-do_package() {
-}
-
