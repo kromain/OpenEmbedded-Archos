@@ -3,7 +3,7 @@
 #
 
 export OE_QMAKESPEC_PATH = "${STAGING_INCDIR}/../mkspecs"
-export OE_QMAKESPEC = "qws/linux-angstrom-gnueabi-g++"
+export OE_QMAKESPEC = "qpa/linux-angstrom-gnueabi-g++"
 export OE_QMAKE_QMAKE = "${STAGING_BINDIR_NATIVE}/qmake"
 
 export OE_QMAKE_CC="${CC}"
