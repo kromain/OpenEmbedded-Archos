@@ -47,6 +47,7 @@ QT_CONFIGURE_OPTIONS = " \
     "
 
 FILES_${PN}     = "/usr/lib/*.so.* \
+		   /usr/lib/fonts \
 		   /usr/plugins/*/*.so \
 		   /usr/imports/Qt/labs/*/*.so \
 		   /usr/imports/Qt/labs/*/qmldir \
