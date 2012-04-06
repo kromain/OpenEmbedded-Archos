@@ -1,0 +1,60 @@
+From e9d61ca37af8b84663369b3eeb056fc00a549d1f Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Mon, 16 Jan 2012 01:13:11 -0600
+Subject: Added xscale/yscale parameters to the LinuxInputMouse QPA plugin
+
+---
+ src/plugins/generic/linuxinput/qlinuxinput.cpp |   10 +++++++---
+ src/plugins/generic/linuxinput/qlinuxinput.h   |    1 +
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/src/plugins/generic/linuxinput/qlinuxinput.cpp b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+index 4e9f6e8..aa2eccc 100644
+--- a/src/plugins/generic/linuxinput/qlinuxinput.cpp
++++ b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+@@ -131,7 +131,7 @@ private:
+ 
+ QLinuxInputMouseHandler::QLinuxInputMouseHandler(const QString &key,
+                                                  const QString &specification)
+-    : m_notify(0), m_x(0), m_y(0), m_prevx(0), m_prevy(0), m_xoffset(0), m_yoffset(0), m_buttons(0), d(0)
++    : m_notify(0), m_x(0), m_y(0), m_prevx(0), m_prevy(0), m_xoffset(0), m_yoffset(0), m_xscale(1.0), m_yscale(1.0), m_buttons(0), d(0)
+ {
+     qDebug() << "QLinuxInputMouseHandler" << key << specification;
+ 
+@@ -153,6 +153,10 @@ QLinuxInputMouseHandler::QLinuxInputMouseHandler(const QString &key,
+             m_xoffset = arg.mid(8).toInt();
+         else if (arg.startsWith("yoffset="))
+             m_yoffset = arg.mid(8).toInt();
++        else if (arg.startsWith("xscale="))
++            m_xscale = arg.mid(7).toFloat();
++        else if (arg.startsWith("yscale="))
++            m_yscale = arg.mid(7).toFloat();
+         else if (arg.startsWith(QLatin1String("/dev/")))
+             dev = arg;
+     }
+@@ -183,8 +187,8 @@ QLinuxInputMouseHandler::~QLinuxInputMouseHandler()
+ 
+ void QLinuxInputMouseHandler::sendMouseEvent(int x, int y, Qt::MouseButtons buttons)
+ {
+-    QPoint pos(x+m_xoffset, y+m_yoffset);
+-    QWindowSystemInterface::handleMouseEvent(0, pos, pos, m_buttons);
++    QPoint pos( (x+m_xoffset) / (m_xscale ? m_xscale : 1.0), (y+m_yoffset) / (m_yscale ? m_yscale : 1.0) );
++    QWindowSystemInterface::handleMouseEvent(0, pos, pos, buttons);
+     m_prevx = x;
+     m_prevy = y;
+ }
+diff --git a/src/plugins/generic/linuxinput/qlinuxinput.h b/src/plugins/generic/linuxinput/qlinuxinput.h
+index 088d3d6..73fd6df 100644
+--- a/src/plugins/generic/linuxinput/qlinuxinput.h
++++ b/src/plugins/generic/linuxinput/qlinuxinput.h
+@@ -71,6 +71,7 @@ private:
+     int                        m_x, m_y;
+     int m_prevx, m_prevy;
+     int m_xoffset, m_yoffset;
++    qreal m_xscale, m_yscale;
+     int m_smoothx, m_smoothy;
+     Qt::MouseButtons           m_buttons;
+     bool m_compression;
+-- 
+1.7.4.1
+

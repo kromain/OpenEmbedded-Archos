@@ -1,0 +1,45 @@
+From 6583293c5b71287f4aa2bc7871e6220522189b78 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Thu, 5 Apr 2012 18:02:15 -0500
+Subject: Adjust LinuxInput plugin defaults for the Archos tablet,
+ so we don't need to specify them at runtime each time.
+
+---
+ src/plugins/generic/linuxinput/qlinuxinput.cpp |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/plugins/generic/linuxinput/qlinuxinput.cpp b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+index 8bbdbf3..5d1c95a 100644
+--- a/src/plugins/generic/linuxinput/qlinuxinput.cpp
++++ b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+@@ -131,15 +131,15 @@ private:
+ 
+ QLinuxInputMouseHandler::QLinuxInputMouseHandler(const QString &key,
+                                                  const QString &specification)
+-    : m_notify(0), m_x(0), m_y(0), m_prevx(0), m_prevy(0), m_xoffset(0), m_yoffset(0), m_xscale(1.0), m_yscale(1.0), m_buttons(0), d(0)
++    : m_notify(0), m_x(0), m_y(0), m_prevx(0), m_prevy(0), m_xoffset(0), m_yoffset(0), m_xscale(19.5), m_yscale(19.0), m_buttons(0), d(0)
+ {
+     qDebug() << "QLinuxInputMouseHandler" << key << specification;
+ 
+ 
+     setObjectName(QLatin1String("LinuxInputSubsystem Mouse Handler"));
+ 
+-    QString dev = QLatin1String("/dev/input/event0");
+-    m_compression = true;
++    QString dev = QLatin1String("/dev/input/event3");
++    m_compression = false;
+     m_smooth = false;
+     int jitterLimit = 0;
+     
+@@ -404,7 +404,7 @@ QLinuxInputKeyboardHandler::QLinuxInputKeyboardHandler(const QString &key, const
+ {
+     setObjectName(QLatin1String("LinuxInputSubsystem Keyboard Handler"));
+ 
+-    QString dev = QLatin1String("/dev/input/event1");
++    QString dev = QLatin1String("/dev/input/event5");
+     int repeat_delay = -1;
+     int repeat_rate = -1;
+ 
+-- 
+1.7.4.1
+

@@ -1,25 +1,40 @@
-SUMMARY = "Qt 4.8.0 Lighthouse - Home edition"
+SUMMARY = "Qt 4.8 Lighthouse - Home edition"
 SECTION = "libs"
-LICENSE = "GPL LGPL QPL"
+LICENSE = "GPL LGPL"
+PR = 1
 
 DEPENDS += " freetype dbus openssl "
 
 inherit qt4_qmake
 
-SRC_URI = "file://src"
-S       = "${WORKDIR}/build"
+QT_VERSION = 4.8.1
 
-QT_SRC_DIR = "/home/romain/dev/Qt/qt-4.8-src"
+SRC_URI = "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QT_VERSION}.tar.gz \
+	  file://${PV}/0001-Fix-build-with-QT_NO_CURSOR-defined.patch;patch=1 \
+	  file://${PV}/0002-Fix-build-when-QT_NO_CURSOR-is-defined.patch;patch=1 \
+	  file://${PV}/0003-Added-the-minimal-set-of-QPA-plugins-to-build-on-Lin.patch;patch=1 \
+	  file://${PV}/0004-Fixed-bug-resulting-in-mouse-events-from-QPA-plugins.patch;patch=1 \
+	  file://${PV}/0005-Added-xscale-yscale-parameters-to-the-LinuxInputMous.patch;patch=1 \
+	  file://${PV}/0006-Fix-duplicate-mouse-event-being-sent-when-single-tou.patch;patch=1 \
+	  file://${PV}/0007-Enable-build-of-the-QtDesigner-lib-for-embedded-too.patch;patch=1 \
+	  file://${PV}/0009-Adjust-LinuxInput-plugin-defaults-for-the-Archos-tab.patch;patch=1 \
+	  file://${PV}/mkspecs \
+	  "
+SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"
+SRC_URI[sha256sum] = "ef851a36aa41b4ad7a3e4c96ca27eaed2a629a6d2fa06c20f072118caed87ae8"
+
+S = "${WORKDIR}/qt-everywhere-opensource-src-${QT_VERSION}"
+
+QT_BUILDMODE = "debug"
+QT_QMAKESPEC = "qpa/linux-angstrom-gnueabi-g++"
 
 QT_CONFIGURE_OPTIONS = " \
     -prefix /usr \
-    -debug \
-#    -release \
+    -${QT_BUILDMODE} \
     -qpa \
     -arch arm \
-    -xplatform qpa/linux-angstrom-gnueabi-g++ \
+    -xplatform ${QT_QMAKESPEC} \
     -fast \
-#    -webkit \
     -no-webkit \
     -no-phonon \
     -no-qt3support \
@@ -54,7 +69,9 @@ do_configure() {
     unset RANLIB
     unset STRIP
 
-    echo c | ${QT_SRC_DIR}/configure -v ${QT_CONFIGURE_OPTIONS} -I${STAGING_INCDIR} -L${STAGING_LIBDIR}
+    cp -R ${WORKDIR}/${PV}/mkspecs .
+
+    echo o | ./configure -v ${QT_CONFIGURE_OPTIONS} -I${STAGING_INCDIR} -L${STAGING_LIBDIR}
 }
 
 do_compile() {

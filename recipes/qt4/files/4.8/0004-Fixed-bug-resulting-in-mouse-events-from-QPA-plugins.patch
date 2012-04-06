@@ -1,0 +1,44 @@
+From 9a90bcc35ead986d817e7de3e7765213931b86fb Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Mon, 16 Jan 2012 00:28:11 -0600
+Subject: Fixed bug resulting in mouse events from QPA plugins not being dispatched to the application.
+
+---
+ src/gui/kernel/qapplication_qpa.cpp |    7 ++-----
+ 1 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/src/gui/kernel/qapplication_qpa.cpp b/src/gui/kernel/qapplication_qpa.cpp
+index 242b5ef..f4107f2 100644
+--- a/src/gui/kernel/qapplication_qpa.cpp
++++ b/src/gui/kernel/qapplication_qpa.cpp
+@@ -618,10 +618,6 @@ void QApplication::setMainWidget(QWidget *mainWidget)
+ 
+ void QApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::MouseEvent *e)
+ {
+-    if (!e->widget)
+-       return;
+-
+-    // qDebug() << "handleMouseEvent" << tlw << ev.pos() << ev.globalPos() << hex << ev.buttons();
+     static QWeakPointer<QWidget> implicit_mouse_grabber;
+ 
+     QEvent::Type type;
+@@ -751,7 +747,6 @@ void QApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::Mouse
+     // Remember, we might enter a modal event loop when sending the event,
+     // so think carefully before adding code below this point.
+ 
+-    // qDebug() << "sending mouse ev." << ev.type() << localPoint << globalPoint << ev.button() << ev.buttons() << mouseWidget << "mouse grabber" << implicit_mouse_grabber;
+ 
+     QMouseEvent ev(type, localPoint, globalPoint, button, buttons, QApplication::keyboardModifiers());
+ 
+@@ -761,6 +756,8 @@ void QApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::Mouse
+             cursor.data()->pointerEvent(ev);
+     }
+ 
++    //qDebug() << "sending mouse event" << ev.type() << localPoint << globalPoint << ev.button() << ev.buttons() << mouseWidget << "mouse grabber" << implicit_mouse_grabber;
++
+     int oldOpenPopupCount = openPopupCount;
+     QApplication::sendSpontaneousEvent(mouseWidget, &ev);
+ 
+-- 
+1.7.4.1
+

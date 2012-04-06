@@ -1,0 +1,45 @@
+From e1c26179a49aa66200e75e2fcecc5be3140e0bbc Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Mon, 16 Jan 2012 00:22:11 -0600
+Subject: Added the minimal set of QPA plugins to build on Linux
+
+---
+ src/plugins/platforms/platforms.pro |    8 +++++++-
+ src/plugins/plugins.pro             |    5 ++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/src/plugins/platforms/platforms.pro b/src/plugins/platforms/platforms.pro
+index ffd9918..4495f36 100644
+--- a/src/plugins/platforms/platforms.pro
++++ b/src/plugins/platforms/platforms.pro
+@@ -1,6 +1,12 @@
+ TEMPLATE = subdirs
+ 
+-SUBDIRS += minimal
++SUBDIRS += minimal qvfb 
++
++linux-*:SUBDIRS += linuxfb 
++
++contains(QT_CONFIG, opengl) {
++    SUBDIRS += eglfs
++}
+ 
+ contains(QT_CONFIG, wayland) {
+     SUBDIRS += wayland
+diff --git a/src/plugins/plugins.pro b/src/plugins/plugins.pro
+index 94ce675..0c8b2c2 100644
+--- a/src/plugins/plugins.pro
++++ b/src/plugins/plugins.pro
+@@ -12,5 +12,8 @@ embedded:SUBDIRS *=  gfxdrivers decorations mousedrivers kbddrivers
+ !win32:!embedded:!mac:!symbian:!contains(QT_CONFIG, no-gui):SUBDIRS *= inputmethods
+ !symbian:!contains(QT_CONFIG, no-gui):SUBDIRS += accessible
+ contains(QT_CONFIG, phonon): SUBDIRS *= phonon
+-qpa:SUBDIRS += platforms
++qpa {
++        SUBDIRS += platforms
++        linux-*:SUBDIRS += generic/linuxinput
++}
+ contains(QT_CONFIG, declarative): SUBDIRS *= qmltooling
+-- 
+1.7.4.1
+

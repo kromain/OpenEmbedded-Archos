@@ -1,0 +1,25 @@
+From ae49a35695820b5de5781062c1d0a100fddfd5ad Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Mon, 16 Jan 2012 01:25:40 -0600
+Subject: Enable build of the QtDesigner lib for embedded too
+
+---
+ projects.pro |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/projects.pro b/projects.pro
+index 0b498f8..daf5895 100644
+--- a/projects.pro
++++ b/projects.pro
+@@ -54,6 +54,8 @@ for(PROJECT, $$list($$lower($$unique(QT_BUILD_PARTS)))) {
+     }
+ }
+ 
++embedded|qpa:!contains(QT_BUILD_PARTS, tools):SUBDIRS += tools/designer/src/uitools tools/designer/src/lib
++
+ !symbian: confclean.depends += clean
+ confclean.commands =
+ unix:!symbian {
+-- 
+1.7.4.1
+
