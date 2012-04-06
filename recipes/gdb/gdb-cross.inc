@@ -6,7 +6,8 @@ DEPENDS += "virtual/${TARGET_PREFIX}gcc"
 
 EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils' LDFLAGS='${BUILD_LDFLAGS}'"
 
-EXTRA_OECONF = "--with-curses --with-readline"
+EXTRA_OECONF = "--with-curses --with-readline \
+		--with-sysroot=${STAGING_DIR_TARGET}"
 
 do_configure () {
 # override this function to avoid the autoconf/automake/aclocal/autoheader
