@@ -84,11 +84,15 @@ do_install() {
 
 do_stage() {
     oe_runmake install INSTALL_ROOT=${STAGING_LIBDIR}/../../
+
+    echo [Paths] > ${STAGING_BINDIR}/qt.conf
+    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR}/qt.conf
+    echo [Paths] > ${STAGING_BINDIR_NATIVE}/qt.conf
+    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR_NATIVE}/qt.conf
+
     if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
       ln -s  ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
     fi
-    echo [Paths] > ${STAGING_BINDIR}/qt.conf
-    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR}/qt.conf
 
     # Avoid annoying errors from some QA checker crap
     cd ${STAGING_LIBDIR}
