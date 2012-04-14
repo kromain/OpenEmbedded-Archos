@@ -20,4 +20,4 @@ source ./setenv-OE.sh $BUILD_NAME
 
 [ "$2" ] && BUILD_TARGET=$2
 
-bitbake $BUILD_TARGET
+bitbake initramfs-archos-image $BUILD_TARGET
