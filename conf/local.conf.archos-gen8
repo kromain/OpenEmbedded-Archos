@@ -1,0 +1,130 @@
+#
+# OpenEmbedded local configuration file - customized for Archos-Gen8
+#
+# Please visit the Wiki at http://openembedded.org/ for more info.
+#
+#
+
+# See the conf/machine for machines currently known to OpenEmbedded.
+MACHINE = "archos-gen8"
+DISTRO = "angstrom-2008.1"
+
+# Where to find the recipes
+BBFILES :=  "${OESRCDIR}/recipes/*/*.bb"
+
+# Use this to specify where BitBake should place the downloaded sources into
+DL_DIR = "${OESRCDIR}/../sources"
+
+# Uncomment this to specify where BitBake should create its temporary files.
+# Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
+# disk space, so make sure to free enough space. The default TMPDIR is
+# <build directory>/tmp
+# Don't use symlinks in in the path to avoid problems
+# TMPDIR = /usr/local/projects/oetmp
+
+# Uncomment this if you want to use a prebuilt toolchain. You will need to
+# provide packages for toolchain and additional libraries yourself. You also
+# have to set PATH in your environment to make sure BitBake finds additional binaries.
+# ASSUME_PROVIDED += "virtual/${TARGET_PREFIX}gcc virtual/libc"
+
+# Add the required image file system types below. Valid are 
+# jffs2, tar(.gz|bz2), cpio(.gz), cramfs, ext2(.gz), ext3(.gz), ext4(.gz|.bz2),
+# squashfs, squashfs-lzma
+IMAGE_FSTYPES = "ext3"
+
+# Uncomment this if you want to keep the temporary rootfs
+# directory, this can be useful during development.
+# (Note that this rootfs is NOT usuable as NFS export.)
+IMAGE_KEEPROOTFS = "1"
+
+# Uncomment this to enable the use of ccache when building.  Due to
+# the nature of our builds this is only helpful in cases when one
+# is rebuilding a recipe or set of recipes, repeatedly.
+# CCACHE = "${@bb.which(bb.data.getVar('PATH', d, 1), 'ccache') and 'ccache '}"
+
+# Uncomment this to disable the parse cache (not recommended).
+# CACHE = ""
+
+# Uncomment this if you want BitBake to emit debugging output
+# BBDEBUG = "yes"
+
+# Use DEBUG_BUILD to build packages with DEBUG_OPTIMIZATION instead of
+# FULL_OPTIMIZATION.
+#
+# DEBUG_BUILD = "1"
+
+# If you want to have unstripped ready-to-debug binaries, set this to "no",
+# although for debugging you can use automatically produced -dbg packages.
+# If you need to have completely undebuggable builds, set this to "full",
+# by default gnu.debuglink section is left in the binaries after stripping, so
+# this might be useful if you want to have checksum-level binary consistency
+# across successive builds.
+# PACKAGE_STRIP = "no"
+
+# Uncomment these to build a package such that you can use gprof to profile it.
+# NOTE: This will only work with 'linux' targets, not
+# 'linux-uclibc', as uClibc doesn't provide the necessary
+# object files.  Also, don't build glibc itself with these
+# flags, or it'll fail to build.
+#
+# PROFILE_OPTIMIZATION = "-pg"
+# SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"
+# LDFLAGS =+ "-pg"
+
+# Uncomment this to enable parallel make.
+# This allows make to spawn mutliple processes to take advantage of multiple 
+# processors. Useful on SMP machines. This may break some packages - we're
+# in the process of marking these so let us know if you find any.
+PARALLEL_MAKE = "-j 4"
+
+# Uncomment to run multiple bitbake threads in parallel.
+# Bitbake can do multiple jobs in parallel: Its a good idea make use of 
+# all available resources: e.g. to download sources while some other
+# piece of software is compiled.
+BB_NUMBER_THREADS = "2"
+
+# Uncomment this if you want BitBake to emit the log if a build fails.
+BBINCLUDELOGS = "yes"
+
+# Uncomment this if you want to install shared libraries directly under their SONAME,
+# rather than installing as the full version and symlinking to the SONAME.
+# PACKAGE_SNAP_LIB_SYMLINKS = "1"
+
+#
+########### ESOTERIC OPTIONS
+#
+
+SOURCE_MIRROR_URL ?= "http://sources.openembedded.org/"
+# By default bitbake requires entries in checksums.ini for all downloads,
+# which is extremely annoying as targets move, so we make our life easier
+# and chose to live in danger instead. 
+OE_ALLOW_INSECURE_DOWNLOADS = "1"
+
+# Use the BBMASK below to instruct BitBake to _NOT_ consider some .bb files
+# This is a regular expression, so be sure to get your parenthesis balanced.
+# BBMASK = "/(nonworking|obsolete)/"
+
+# So far, angstrom.conf sets ENABLE_BINARY_LOCALE_GENERATION
+# to generate binary locale packages at build time using qemu-native and
+# thereby guarantee i18n support on all devices.
+# But this requires a nasty hack on Ubuntu, so we just disable it.
+# For more info see http://www.openembedded.org/wiki/Category_talk:FAQ#9._sanity_checker_complains_.22.2Fproc.2Fsys.2Fvm.2Fmmap_min_addr_is_not_0.22_on_Ubuntu)
+ENABLE_BINARY_LOCALE_GENERATION = "0"
+
+# Comment this if your host distribution does not provide the
+# help2man tool.
+ASSUME_PROVIDED += "help2man-native"
+
+# Uncomment this if your host distribution has recent enough Linux
+# Kernel header files.  Utilities we use to generate certain types of
+# target filesystems need somewhat recent header files.
+ASSUME_PROVIDED += "linux-libc-headers-native"
+
+# Select between multiple alternative providers, if more than one is eligible.
+PREFERRED_PROVIDERS = "virtual/qte:qte virtual/libqpe:libqpe-opie"
+PREFERRED_PROVIDERS += " virtual/libsdl:libsdl-x11"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}gcc-initial:gcc-cross-initial"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}gcc-intermediate:gcc-cross-intermediate"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}gcc:gcc-cross"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
+
