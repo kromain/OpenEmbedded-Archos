@@ -5,6 +5,7 @@ DEPENDS += "unifdef-native"
 PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2 \
+           file://add-mt-events-to-input-h.patch;patch=1 \
 	  "
 
 S = "${WORKDIR}/linux-${PV}"
