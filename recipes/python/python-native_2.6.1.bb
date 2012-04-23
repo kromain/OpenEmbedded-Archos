@@ -1,5 +1,5 @@
 require python.inc
-DEPENDS = "openssl-native bzip2-full-native"
+DEPENDS = "openssl-native bzip2-full-native zlib-native"
 
 SRC_URI = "\
   http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
@@ -8,6 +8,7 @@ SRC_URI = "\
   file://10-distutils-fix-swig-parameter.patch;patch=1 \
   file://11-distutils-never-modify-shebang-line.patch;patch=1 \
   file://12-distutils-prefix-is-inside-staging-area.patch;patch=1 \
+  file://nohostlibs.patch \
 "
 S = "${WORKDIR}/Python-${PV}"
 
