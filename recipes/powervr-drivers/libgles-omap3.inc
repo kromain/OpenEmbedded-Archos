@@ -208,6 +208,24 @@ do_install () {
 
 }
 
+do_stage () {
+	install -d ${STAGING_LIBDIR}
+	cp -pP ${BINLOCATION}/*.so* ${STAGING_LIBDIR}
+	cp -pP ${BINLOCATION}/*.a ${STAGING_LIBDIR}
+
+	install -d ${STAGING_INCDIR}
+    cp -pPR ${S}/GFX_Linux_KM/include4 ${STAGING_INCDIR}/
+    cp -pPR ${S}/GFX_Linux_KM/services4 ${STAGING_INCDIR}/
+
+	cp -pPR ${S}/GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/Include/*  ${STAGING_INCDIR}/
+    cp -pPR ${S}/GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/Include/* ${STAGING_INCDIR}/
+    cp -pPR ${S}/GFX_Linux_SDK/OGLES/SDKPackage/Builds/OGLES/LinuxOMAP3/Include/GLES/* ${STAGING_INCDIR}/GLES/ || true
+    cp -pPr ${S}/GFX_Linux_SDK/OGLES2/SDKPackage/Builds/OGLES2/LinuxOMAP3/Include/GLES/* ${STAGING_INCDIR}/GLES2/ || true
+	cp -pPr ${S}/GFX_Linux_SDK/OVG/SDKPackage/Builds/OVG/Include/v* ${STAGING_INCDIR}/ || true
+	cp -pPr ${S}/GFX_Linux_SDK/OVG/SDKPackage/Builds/OVG/Include/V* ${STAGING_INCDIR}/ || true
+	cp -pPr ${S}/include/*.h ${STAGING_INCDIR}/ || true
+}
+
 PACKAGES =+ "${PN}-rawdemos \
              ${PN}-x11demos \
              ${PN}-rawtrainingcourses \
