@@ -96,7 +96,7 @@ do_stage() {
 	export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
 	
     # make settings persistent in qmake, so we can use it without and OE env
-	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_PREFIX ${HOST_PREFIX}
+	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_PREFIX ${CROSS_DIR}/bin/${HOST_PREFIX}
 	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_CFLAGS "`echo ${HOST_CC_ARCH} ${TARGET_CFLAGS} | eval $fix_chars`"
 	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_CXXFLAGS "`echo ${HOST_CC_ARCH} ${TARGET_CXXFLAGS} | eval $fix_chars`"
 	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_LFLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
