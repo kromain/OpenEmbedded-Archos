@@ -5,8 +5,6 @@ PR = 1
 
 DEPENDS += " freetype dbus openssl "
 
-inherit qt4_qmake
-
 QT_VERSION = 4.8.1
 
 SRC_URI = "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QT_VERSION}.tar.gz \
@@ -18,6 +16,7 @@ SRC_URI = "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-$
 	  file://${PV}/0006-Fix-duplicate-mouse-event-being-sent-when-single-tou.patch;patch=1 \
 	  file://${PV}/0007-Enable-build-of-the-QtDesigner-lib-for-embedded-too.patch;patch=1 \
 	  file://${PV}/0009-Adjust-LinuxInput-plugin-defaults-for-the-Archos-tab.patch;patch=1 \
+	  file://${PV}/fix-configure-sysroot-option.patch;patch=1 \
 	  file://${PV}/mkspecs \
 	  "
 SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"
@@ -30,6 +29,7 @@ QT_QMAKESPEC = "qpa/linux-angstrom-gnueabi-g++"
 
 QT_CONFIGURE_OPTIONS = " \
     -prefix /usr \
+    -sysroot ${STAGING_DIR_HOST} \
     -${QT_BUILDMODE} \
     -qpa \
     -arch arm \
@@ -62,17 +62,19 @@ FILES_${PN}-dbg = "/usr/lib/*.debug \
 		   /usr/imports/Qt/labs/*/*.debug \
 		   "
 
-do_configure() {
-    unset QMAKESPEC
-    unset CC
-    unset CXX
-    unset LD
-    unset RANLIB
-    unset STRIP
+export OE_TOOLCHAIN_PREFIX=${HOST_PREFIX}
+export OE_TOOLCHAIN_ARGS="${HOST_CC_ARCH}"
+export CC=
+export CXX=
+export LD=
+export CFLAGS=
+export CXXFLAGS=
+export LDFLAGS=
 
+do_configure() {
     cp -R ${WORKDIR}/${PV}/mkspecs .
 
-    echo o | ./configure -v ${QT_CONFIGURE_OPTIONS} -I${STAGING_INCDIR} -L${STAGING_LIBDIR}
+    echo o | ./configure -v ${QT_CONFIGURE_OPTIONS}
 }
 
 do_compile() {
@@ -84,13 +86,20 @@ do_install() {
 }
 
 do_stage() {
-    oe_runmake install INSTALL_ROOT=${STAGING_LIBDIR}/../../
+    oe_runmake install INSTALL_ROOT=${STAGING_DIR_HOST}
 
     echo [Paths] > ${STAGING_BINDIR}/qt.conf
     echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR}/qt.conf
     echo [Paths] > ${STAGING_BINDIR_NATIVE}/qt.conf
     echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR_NATIVE}/qt.conf
 
+    # make settings persistent in qmake, so we can use it without and OE env
+	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_PREFIX ${HOST_PREFIX}
+	${STAGING_BINDIR}/qmake -set QT_CFLAGS "${HOST_CC_ARCH} ${TARGET_CFLAGS}"
+	${STAGING_BINDIR}/qmake -set QT_CXXFLAGS "${HOST_CC_ARCH} ${TARGET_CXXFLAGS}"
+	${STAGING_BINDIR}/qmake -set QT_LFLAGS "${TARGET_LDFLAGS}"
+	${STAGING_BINDIR}/qmake -set QT_SYSROOT ${STAGING_DIR_HOST}
+	
     if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
       ln -s  ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
     fi
