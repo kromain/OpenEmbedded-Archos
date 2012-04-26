@@ -93,12 +93,14 @@ do_stage() {
     echo [Paths] > ${STAGING_BINDIR_NATIVE}/qt.conf
     echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR_NATIVE}/qt.conf
 
+	export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
+	
     # make settings persistent in qmake, so we can use it without and OE env
 	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_PREFIX ${HOST_PREFIX}
-	${STAGING_BINDIR}/qmake -set QT_CFLAGS "${HOST_CC_ARCH} ${TARGET_CFLAGS}"
-	${STAGING_BINDIR}/qmake -set QT_CXXFLAGS "${HOST_CC_ARCH} ${TARGET_CXXFLAGS}"
-	${STAGING_BINDIR}/qmake -set QT_LFLAGS "${TARGET_LDFLAGS}"
-	${STAGING_BINDIR}/qmake -set QT_SYSROOT ${STAGING_DIR_HOST}
+	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_CFLAGS "`echo ${HOST_CC_ARCH} ${TARGET_CFLAGS} | eval $fix_chars`"
+	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_CXXFLAGS "`echo ${HOST_CC_ARCH} ${TARGET_CXXFLAGS} | eval $fix_chars`"
+	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_LFLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
+	${STAGING_BINDIR}/qmake -set QT_TARGET_SYSROOT ${STAGING_DIR_HOST}
 	
     if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
       ln -s  ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
