@@ -1,2 +1,2 @@
 BUILD_NAME=archos-gen8
-BUILD_TARGET=archos-console-image
+BUILD_TARGET=archos-qt5-image
