@@ -34,6 +34,7 @@ QT_CONFIGURE_OPTIONS = " \
     -sysroot ${STAGING_DIR_HOST} \
     -${QT_BUILDMODE} \
     -prefix /usr \
+    -hostprefix ${S}/qtbase \
     -developer-build \
     -opensource \
     -confirm-license \
