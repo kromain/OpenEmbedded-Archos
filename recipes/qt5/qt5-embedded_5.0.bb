@@ -7,11 +7,24 @@ DEPENDS += " freetype dbus openssl libgles-omap3"
 
 QT_VERSION = 5.0.0
 
-#IMPORTANT until the beta is out, we need a local git checkout >= than Apr 27 2012
-# create a symlink to your checkout folder under src/ in the recipe
+################# README
+# Until the beta is out, we need a local git checkout >= Apr 27 2012
+# so our device mkspecs are found.
+#
+# Follow instructions at http://qt-project.org/wiki/Building_Qt_5_from_Git
+# to check out the code and initialize the submodules.
+# You need the qt5 repo, with qtbase, qtdeclarative, etc. as submodules.
+#
+# Then, we need to create a symlink to the qt5 folder called qt5-src
+# under src/ in the recipe folder:
+#
+# mkdir <path_to_oe_>/recipes/qt5/src
+# ln -s <path_to_qt5> <path_to_oe_>/recipes/qt5/src/qt5-src
+#
+########################
 
 SRC_URI = "file://src"
-S = "${WORKDIR}/qt5-build"
+S = "${WORKDIR}/src/qt5-build"
 
 QT_BUILDMODE = "debug"
 
@@ -53,7 +66,7 @@ export LDFLAGS=
 export QTDIR=
 
 do_configure() {
-    echo o | ../src/qt5-src/configure -v ${QT_CONFIGURE_OPTIONS}
+    echo o | ../qt5-src/configure ${QT_CONFIGURE_OPTIONS}
 }
 
 do_compile() {
