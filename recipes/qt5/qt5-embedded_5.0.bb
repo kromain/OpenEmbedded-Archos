@@ -26,7 +26,6 @@ QT_CONFIGURE_OPTIONS = " \
     -confirm-license \
     -nomake examples \
     -nomake tests \
-    -v \
     "
 
 FILES_${PN}     = "/usr/lib/*.so.* \
@@ -51,6 +50,7 @@ export LD=
 export CFLAGS=
 export CXXFLAGS=
 export LDFLAGS=
+export QTDIR=
 
 do_configure() {
     echo o | ../src/qt5-src/configure -v ${QT_CONFIGURE_OPTIONS}
