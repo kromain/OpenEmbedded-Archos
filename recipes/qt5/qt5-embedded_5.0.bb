@@ -43,20 +43,20 @@ QT_CONFIGURE_OPTIONS = " \
     "
 
 FILES_${PN}     = "/usr/lib/*.so.* \
-		   /usr/lib/fonts \
-		   /usr/plugins/*/*.so \
-		   /usr/imports/Qt/labs/*/*.so \
-		   /usr/imports/Qt/labs/*/qmldir \
-		   "
+                   /usr/lib/fonts \
+                   /usr/plugins/*/*.so \
+                   /usr/imports/Qt/labs/*/*.so \
+                   /usr/imports/Qt/labs/*/qmldir \
+                   "
 FILES_${PN}-dev = "/usr/include \
-		   /usr/lib/*.so \
-		   /usr/lib/*.la \
-		   /usr/lib/pkgconfig \
-                  "
+                   /usr/lib/*.so \
+                   /usr/lib/*.la \
+                   /usr/lib/pkgconfig \
+                   "
 FILES_${PN}-dbg = "/usr/lib/*.debug \
-		   /usr/plugins/*/*.debug \
-		   /usr/imports/Qt/labs/*/*.debug \
-		   "
+                   /usr/plugins/*/*.debug \
+                   /usr/imports/Qt/labs/*/*.debug \
+                   "
 
 export CC=
 export CXX=
@@ -76,19 +76,25 @@ do_compile() {
 
 do_install() {
     oe_runmake install INSTALL_ROOT=${D}
+    mv ${D}/${STAGING_DIR_HOST}/usr ${D}/usr
 }
 
 do_stage() {
-    oe_runmake install INSTALL_ROOT=${STAGING_DIR_HOST}
+	#qdevice.pri gets overwritten somehow resulting in a failing install
+	${D}${S}/qtbase/bin/qmake -set CROSS_COMPILE ${HOST_PREFIX}
 
-    echo [Paths] > ${STAGING_BINDIR}/qt.conf
-    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR}/qt.conf
-    echo [Paths] > ${STAGING_BINDIR_NATIVE}/qt.conf
-    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR_NATIVE}/qt.conf
+    oe_runmake install
 
-    if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
-      ln -s  ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
-    fi
+	# Qt5 installs the host tools in the host install prefix
+    cp ${D}${S}/qtbase/bin/* ${STAGING_BINDIR_NATIVE}
+    cp -R ${D}${S}/qtbase/mkspecs ${STAGING_DIR_NATIVE}/usr
+
+	export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
+
+    # make settings persistent in qmake, so we can use it without an OE env
+	${STAGING_BINDIR_NATIVE}/qmake -set CROSS_COMPILE ${CROSS_DIR}/bin/${HOST_PREFIX}
+	${STAGING_BINDIR_NATIVE}/qmake -set COMPILER_FLAGS "`echo ${TARGET_CXXFLAGS} | eval $fix_chars`"
+	${STAGING_BINDIR_NATIVE}/qmake -set LINKER_FLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
 
     # Avoid annoying errors from some QA checker crap
     cd ${STAGING_LIBDIR}
