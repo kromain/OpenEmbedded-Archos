@@ -58,6 +58,8 @@ FILES_${PN}-dbg = "/usr/lib/*.debug \
                    /usr/imports/Qt/labs/*/*.debug \
                    "
 
+QT_CONF_FILE = ${STAGING_BINDIR_NATIVE}/qt.conf
+
 export CC=
 export CXX=
 export LD=
@@ -80,21 +82,23 @@ do_install() {
 }
 
 do_stage() {
-	#qdevice.pri gets overwritten somehow resulting in a failing install
-	${D}${S}/qtbase/bin/qmake -set CROSS_COMPILE ${HOST_PREFIX}
+    cp -R ${D}/usr/* ${STAGING_DIR_HOST}/usr
+    # Qt5 installs the host tools in the host install prefix
+    cp -R ${D}${S}/qtbase/* ${STAGING_DIR_NATIVE}/usr
 
-    oe_runmake install
+    # We must adjust the host prefix, need a qt.conf file for that
+    echo [Paths] > ${QT_CONF_FILE}
+    echo Sysroot=${STAGING_DIR_HOST}
+    echo Prefix=/usr >> ${QT_CONF_FILE}
+    echo HostPrefix=${STAGING_DIR_NATIVE}/usr >> ${QT_CONF_FILE}
 
-	# Qt5 installs the host tools in the host install prefix
-    cp ${D}${S}/qtbase/bin/* ${STAGING_BINDIR_NATIVE}
-    cp -R ${D}${S}/qtbase/mkspecs ${STAGING_DIR_NATIVE}/usr
+    export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
 
-	export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
-
-    # make settings persistent in qmake, so we can use it without an OE env
-	${STAGING_BINDIR_NATIVE}/qmake -set CROSS_COMPILE ${CROSS_DIR}/bin/${HOST_PREFIX}
-	${STAGING_BINDIR_NATIVE}/qmake -set COMPILER_FLAGS "`echo ${TARGET_CXXFLAGS} | eval $fix_chars`"
-	${STAGING_BINDIR_NATIVE}/qmake -set LINKER_FLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
+    # Now make the toolchain settings persistent in qmake
+    # so we can use it without an OE env
+    ${STAGING_BINDIR_NATIVE}/qmake -set CROSS_COMPILE ${CROSS_DIR}/bin/${HOST_PREFIX}
+    ${STAGING_BINDIR_NATIVE}/qmake -set COMPILER_FLAGS "`echo ${TARGET_CXXFLAGS} | eval $fix_chars`"
+    ${STAGING_BINDIR_NATIVE}/qmake -set LINKER_FLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
 
     # Avoid annoying errors from some QA checker crap
     cd ${STAGING_LIBDIR}
