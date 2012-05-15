@@ -4,9 +4,6 @@ DEFAULT_PREFERENCE_avr32 = "-99"
 
 DEPENDS = "ncurses readline zlib flex-native bison-native"
 
-PACKAGES =+ "gdbserver"
-FILES_gdbserver = "${bindir}/gdbserver"
-
 RRECOMMENDS_gdb_append_libc-glibc = " glibc-thread-db "
 RRECOMMENDS_gdb_append_libc-uclibc = " uclibc-thread-db "
 
