@@ -6,6 +6,7 @@ ANGSTROM_EXTRA_INSTALL ?= ""
 
 DEPENDS = "task-base-extended \
            ${@base_contains("MACHINE_FEATURES", "screen", "psplash-zap", "",d)} \
+           virtual/${TARGET_PREFIX}gdb \
 	   "
 
 IMAGE_INSTALL = "task-base-extended \

@@ -4,6 +4,8 @@ DEPENDS = "ncurses-native zlib-native expat-native flex-native bison-native"
 # We must have this around in order to link gdb
 DEPENDS += "virtual/${TARGET_PREFIX}gcc"
 
+PROVIDES = "virtual/${TARGET_PREFIX}gdb"
+
 EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils' LDFLAGS='${BUILD_LDFLAGS}'"
 
 EXTRA_OECONF = "--with-curses --with-readline \
