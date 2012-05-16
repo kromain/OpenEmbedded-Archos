@@ -23,7 +23,9 @@ QT_VERSION = 5.0.0
 #
 ########################
 
-SRC_URI = "file://src"
+SRC_URI = "file://src \
+		file://Add-top-level-include-path-for-QtCore.patch;patch=1 \
+		"
 S = "${WORKDIR}/src/qt5-build"
 
 QT_BUILDMODE = "debug"

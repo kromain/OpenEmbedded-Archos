@@ -1,0 +1,26 @@
+From 7c0e85d485b9353d5491b415f033a4bb3a2c2398 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Tue, 15 May 2012 17:13:00 -0700
+Subject: [PATCH] Add top-level include path for QtCore
+
+Change-Id: I9a31f3f45a789662d02960a3e3feea8be7be7d5e
+---
+ src/modules/qt_core.pri |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/../qt5-src/qtbase/src/modules/qt_core.pri b/../qt5-src/qtbase/src/modules/qt_core.pri
+index e6e5df9..5668ce9 100644
+--- a/../qt5-src/qtbase/src/modules/qt_core.pri
++++ b/../qt5-src/qtbase/src/modules/qt_core.pri
+@@ -5,7 +5,7 @@ QT.core.PATCH_VERSION = 0
+ 
+ QT.core.name = QtCore
+ QT.core.bins = $$QT_MODULE_BIN_BASE
+-QT.core.includes = $$QT_MODULE_INCLUDE_BASE/QtCore
++QT.core.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtCore
+ QT.core.private_includes = $$QT_MODULE_INCLUDE_BASE/QtCore/$$QT.core.VERSION
+ QT.core.sources = $$QT_MODULE_BASE/src/corelib
+ QT.core.libs = $$QT_MODULE_LIB_BASE
+-- 
+1.7.9.5
+
