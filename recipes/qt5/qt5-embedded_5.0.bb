@@ -89,6 +89,9 @@ do_stage() {
     # Qt5 installs the host tools in the host install prefix
     cp -R ${D}${S}/qtbase/* ${STAGING_DIR_NATIVE}/usr
 
+	# Fix for QtCreator 2.5.0 that looks for mkspecs in QT_INSTALL_DATA instead of QT_HOST_DATA
+	cp -R ${STAGING_DIR_NATIVE}/usr/mkspecs ${STAGING_DIR_HOST}/usr
+
     # We must adjust the host prefix, need a qt.conf file for that
     echo [Paths] > ${QT_CONF_FILE}
     echo Sysroot=${STAGING_DIR_HOST} >> ${QT_CONF_FILE}
