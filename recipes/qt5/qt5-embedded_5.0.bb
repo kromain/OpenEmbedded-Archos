@@ -24,7 +24,7 @@ QT_VERSION = 5.0.0
 ########################
 
 SRC_URI = "file://src \
-		file://Add-top-level-include-path-for-QtCore.patch;patch=1 \
+#		file://Add-top-level-include-path-for-QtCore.patch;patch=1 \
 		"
 S = "${WORKDIR}/src/qt5-build"
 
@@ -90,7 +90,7 @@ do_stage() {
 
     # We must adjust the host prefix, need a qt.conf file for that
     echo [Paths] > ${QT_CONF_FILE}
-    echo Sysroot=${STAGING_DIR_HOST}
+    echo Sysroot=${STAGING_DIR_HOST} >> ${QT_CONF_FILE}
     echo Prefix=/usr >> ${QT_CONF_FILE}
     echo HostPrefix=${STAGING_DIR_NATIVE}/usr >> ${QT_CONF_FILE}
 
