@@ -3,7 +3,10 @@ require gcc-configure-common.inc
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 
 EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} \
-		      --with-gxx-include-dir=${STAGING_DIR_TARGET}/${layout_includedir}/c++ \
+# Romain: removed to make the toolchain relocatable
+# no more hardcoded path to the staging dir, it uses relative paths instead
+# and doesn't affect cross-compilation in our case, as we have --sysroot 
+#		      --with-gxx-include-dir=${STAGING_DIR_TARGET}/${layout_includedir}/c++ \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
