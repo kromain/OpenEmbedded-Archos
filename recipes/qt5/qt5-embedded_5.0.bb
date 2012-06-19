@@ -46,18 +46,19 @@ QT_CONFIGURE_OPTIONS = " \
 
 FILES_${PN}     = "/usr/lib/*.so.* \
                    /usr/lib/fonts \
-                   /usr/plugins/*/*.so \
-                   /usr/imports/Qt/labs/*/*.so \
-                   /usr/imports/Qt/labs/*/qmldir \
+                   /usr/plugins/* \
+                   /usr/imports/* \
                    "
 FILES_${PN}-dev = "/usr/include \
                    /usr/lib/*.so \
                    /usr/lib/*.la \
                    /usr/lib/pkgconfig \
                    "
-FILES_${PN}-dbg = "/usr/lib/*.debug \
-                   /usr/plugins/*/*.debug \
-                   /usr/imports/Qt/labs/*/*.debug \
+FILES_${PN}-dbg = "/usr/lib/.debug \
+                   /usr/plugins/*/.debug \
+                   /usr/imports/*/.debug \
+                   /usr/imports/*/*/.debug \
+                   /usr/imports/*/*/*/.debug \
                    "
 
 QT_CONF_FILE = ${STAGING_BINDIR_NATIVE}/qt.conf
