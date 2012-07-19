@@ -24,7 +24,7 @@ SRC_URI[sha256sum] = "ef851a36aa41b4ad7a3e4c96ca27eaed2a629a6d2fa06c20f072118cae
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${QT_VERSION}"
 
-QT_BUILDMODE = "debug"
+QT_BUILDMODE = "release"
 QT_QMAKESPEC = "qpa/linux-angstrom-gnueabi-g++"
 
 QT_CONFIGURE_OPTIONS = " \
