@@ -90,8 +90,6 @@ do_stage() {
 
     echo [Paths] > ${STAGING_BINDIR}/qt.conf
     echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR}/qt.conf
-    echo [Paths] > ${STAGING_BINDIR_NATIVE}/qt.conf
-    echo Prefix=${STAGING_LIBDIR}/.. >> ${STAGING_BINDIR_NATIVE}/qt.conf
 
 	export fix_chars='sed -e "s/=/:/g" -e "s/ *-\([^ ]*\)/ \1/g"'
 	
@@ -102,7 +100,8 @@ do_stage() {
 	${STAGING_BINDIR}/qmake -set QT_TOOLCHAIN_LFLAGS "`echo ${TARGET_LDFLAGS} | eval $fix_chars`"
 	
     if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
-      ln -s  ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
+      ln -s ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
+      ln -s ${STAGING_BINDIR}/qt.conf ${STAGING_BINDIR_NATIVE}/qt.conf
     fi
 
     # Avoid annoying errors from some QA checker crap
