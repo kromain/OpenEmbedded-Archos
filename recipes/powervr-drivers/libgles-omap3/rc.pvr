@@ -1,7 +1,7 @@
 #!/bin/sh
 PATH=$PATH:/usr/sbin
 
-CPUTYPE="$(cputype)"
+CPUTYPE="OMAP3530"
 
 if [ "$1" = "" ]; then
 	echo PVR-INIT: Please use start, stop, or restart.
