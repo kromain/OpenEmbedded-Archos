@@ -101,6 +101,8 @@ do_stage() {
 	
     if [ ! -f ${STAGING_BINDIR_NATIVE}/qmake ]; then
       ln -s ${STAGING_BINDIR}/qmake ${STAGING_BINDIR_NATIVE}/qmake
+    fi
+    if [ ! -f ${STAGING_BINDIR_NATIVE}/qt.conf ]; then
       ln -s ${STAGING_BINDIR}/qt.conf ${STAGING_BINDIR_NATIVE}/qt.conf
     fi
 
