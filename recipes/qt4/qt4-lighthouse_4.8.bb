@@ -17,6 +17,7 @@ SRC_URI = "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-$
 	  file://${PV}/0007-Enable-build-of-the-QtDesigner-lib-for-embedded-too.patch;patch=1 \
 	  file://${PV}/0009-Adjust-LinuxInput-plugin-defaults-for-the-Archos-tab.patch;patch=1 \
 	  file://${PV}/fix-configure-sysroot-option.patch;patch=1 \
+	  file://${PV}/enable-linuxinput-touch-events.patch;patch=1 \
 	  file://${PV}/mkspecs \
 	  "
 SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"

@@ -1,0 +1,26 @@
+From b70eead104d03ce52b971f0ac008519e92d9a779 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Wed, 22 Aug 2012 13:25:19 -0700
+Subject: [PATCH] enable linuxinput touch events
+
+Change-Id: I6fe7852e8a0769175d55ff7459f6d34c4206aeea
+---
+ src/plugins/generic/linuxinput/qlinuxinput.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/plugins/generic/linuxinput/qlinuxinput.cpp b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+index 4e9f6e8..f01292f 100644
+--- a/src/plugins/generic/linuxinput/qlinuxinput.cpp
++++ b/src/plugins/generic/linuxinput/qlinuxinput.cpp
+@@ -65,7 +65,7 @@
+ QT_BEGIN_NAMESPACE
+ 
+ 
+-//#define QT_QPA_EXPERIMENTAL_TOUCHEVENT
++#define QT_QPA_EXPERIMENTAL_TOUCHEVENT
+ 
+ #ifdef QT_QPA_EXPERIMENTAL_TOUCHEVENT
+ class QLinuxInputMouseHandlerData
+-- 
+1.7.9.5
+
