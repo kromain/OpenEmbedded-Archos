@@ -28,13 +28,15 @@ SRC_URI = "file://src \
 		"
 S = "${WORKDIR}/src/qt5-build"
 
-QT_BUILDMODE = "debug"
+QT_BUILDMODE = "release"
 
 QT_CONFIGURE_OPTIONS = " \
     -device linux-archos-gen8-g++ \
     -device-option CROSS_COMPILE=${CROSS_DIR}/bin/${HOST_PREFIX} \
     -sysroot ${STAGING_DIR_HOST} \
     -${QT_BUILDMODE} \
+    -no-c++11 \
+    -no-pch \
     -prefix /usr \
     -hostprefix ${S}/qtbase \
     -developer-build \
