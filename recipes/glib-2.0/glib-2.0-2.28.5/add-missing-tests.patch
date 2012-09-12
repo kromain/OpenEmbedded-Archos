@@ -1,0 +1,16 @@
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -86,11 +86,13 @@ test_programs =					\
+ 	$(CXX_TEST)				\
+ 	child-test				\
+ 	completion-test				\
++	date-test				\
+ 	dirname-test				\
+ 	file-test				\
+ 	env-test				\
+ 	gio-test				\
+ 	iochannel-test				\
++	list-test				\
+ 	mainloop-test				\
+ 	mapping-test				\
+ 	module-test				\
