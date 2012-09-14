@@ -6,7 +6,7 @@ Index: curl-7.16.4/libcurl.pc.in
  URL: http://curl.haxx.se/
  Description: Library to transfer files with ftp, http, etc.
  Version: @VERSION@
--Libs: -L${libdir} -lcurl @LDFLAGS@ @LIBS@
+-Libs: -L${libdir} -lcurl @LIBS@
 -Libs.private: @LIBCURL_LIBS@ @LIBS@
 +Requires.private: @GNUTLS_REQUIRED@
 +Libs: -L${libdir} -lcurl

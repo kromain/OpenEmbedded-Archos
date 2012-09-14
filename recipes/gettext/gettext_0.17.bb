@@ -10,6 +10,7 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://autotools.patch;patch=1 \
 	   file://wchar-uclibc.patch;patch=1 \
 	   file://use_open_properly.patch;patch=1 \
+	   file://m4_copy.patch;patch=1 \
 	  "
 
 SRC_URI_append_linux-uclibc = " file://gettext-error_print_progname.patch;patch=1"
