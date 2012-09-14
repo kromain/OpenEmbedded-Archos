@@ -1,29 +1,20 @@
-SUMMARY = "Qt 4.8 Lighthouse - Home edition"
+SUMMARY = "Qt 4.8.3 Lighthouse - Home edition"
 SECTION = "libs"
 LICENSE = "GPL LGPL"
-PR = 1
+PR = "r1"
 
 DEPENDS += " freetype dbus openssl "
 
-QT_VERSION = 4.8.1
-
-SRC_URI = "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QT_VERSION}.tar.gz \
-	  file://${PV}/0001-Fix-build-with-QT_NO_CURSOR-defined.patch;patch=1 \
-	  file://${PV}/0002-Fix-build-when-QT_NO_CURSOR-is-defined.patch;patch=1 \
-	  file://${PV}/0003-Added-the-minimal-set-of-QPA-plugins-to-build-on-Lin.patch;patch=1 \
-	  file://${PV}/0004-Fixed-bug-resulting-in-mouse-events-from-QPA-plugins.patch;patch=1 \
-	  file://${PV}/0005-Added-xscale-yscale-parameters-to-the-LinuxInputMous.patch;patch=1 \
-	  file://${PV}/0006-Fix-duplicate-mouse-event-being-sent-when-single-tou.patch;patch=1 \
-	  file://${PV}/0007-Enable-build-of-the-QtDesigner-lib-for-embedded-too.patch;patch=1 \
-	  file://${PV}/0009-Adjust-LinuxInput-plugin-defaults-for-the-Archos-tab.patch;patch=1 \
-	  file://${PV}/fix-configure-sysroot-option.patch;patch=1 \
-	  file://${PV}/enable-linuxinput-touch-events.patch;patch=1 \
-	  file://${PV}/mkspecs \
+SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
+	  file://0003-Added-the-minimal-set-of-QPA-plugins-to-build-on-Lin.patch;patch=1 \
+	  file://0005-Added-xscale-yscale-parameters-to-the-LinuxInputMous.patch;patch=1 \
+	  file://0007-Enable-build-of-the-QtDesigner-lib-for-embedded-too.patch;patch=1 \
+	  file://0009-Adjust-LinuxInput-plugin-defaults-for-the-Archos-tab.patch;patch=1 \
+	  file://enable-linuxinput-touch-events.patch;patch=1 \
+	  file://mkspecs \
 	  "
-SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"
-SRC_URI[sha256sum] = "ef851a36aa41b4ad7a3e4c96ca27eaed2a629a6d2fa06c20f072118caed87ae8"
 
-S = "${WORKDIR}/qt-everywhere-opensource-src-${QT_VERSION}"
+S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
 QT_BUILDMODE = "release"
 QT_QMAKESPEC = "qpa/linux-angstrom-gnueabi-g++"
@@ -73,7 +64,7 @@ export CXXFLAGS=
 export LDFLAGS=
 
 do_configure() {
-    cp -R ${WORKDIR}/${PV}/mkspecs .
+    cp -R ${WORKDIR}/mkspecs .
 
     echo o | ./configure -v ${QT_CONFIGURE_OPTIONS}
 }
