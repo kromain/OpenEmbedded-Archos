@@ -1,0 +1,10 @@
+--- a/Makefile.pre.in	2012-09-14 15:24:34.798498811 -0700
++++ b/Makefile.pre.in	2012-09-14 15:26:03.490499736 -0700
+@@ -904,6 +904,7 @@
+ 	export PATH; PATH="`pwd`:$$PATH"; \
+ 	export PYTHONPATH; PYTHONPATH="`pwd`/Lib"; \
+ 	export DYLD_FRAMEWORK_PATH; DYLD_FRAMEWORK_PATH="`pwd`"; \
++	export LD_LIBRARY_PATH; LD_LIBRARY_PATH="`pwd`"; \
+ 	export EXE; EXE="$(BUILDEXE)"; \
+ 	cd $(srcdir)/Lib/$(PLATDIR); ./regen
+ 

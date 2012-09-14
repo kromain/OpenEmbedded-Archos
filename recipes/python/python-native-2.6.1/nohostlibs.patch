@@ -1,8 +1,6 @@
-Index: Python-2.6.6/setup.py
-===================================================================
---- Python-2.6.6.orig/setup.py
-+++ Python-2.6.6/setup.py
-@@ -356,8 +356,8 @@ class PyBuildExt(build_ext):
+--- a/setup.py.orig	2012-09-14 15:45:16.486511763 -0700
++++ b/setup.py	2012-09-14 15:51:26.122515618 -0700
+@@ -310,8 +310,8 @@
  
      def detect_modules(self):
          # Ensure that /usr/local is always used
@@ -13,13 +11,12 @@ Index: Python-2.6.6/setup.py
  
          # Add paths specified in the environment variables LDFLAGS and
          # CPPFLAGS for header and library files.
-@@ -393,10 +393,10 @@ class PyBuildExt(build_ext):
+@@ -347,10 +347,9 @@
                      for directory in reversed(options.dirs):
                          add_dir_to_list(dir_list, directory)
  
 -        if os.path.normpath(sys.prefix) != '/usr':
 -            add_dir_to_list(self.compiler.library_dirs,
-+
 +        add_dir_to_list(self.compiler.library_dirs,
                              sysconfig.get_config_var("LIBDIR"))
 -            add_dir_to_list(self.compiler.include_dirs,
@@ -27,7 +24,7 @@ Index: Python-2.6.6/setup.py
                              sysconfig.get_config_var("INCLUDEDIR"))
  
          try:
-@@ -407,11 +407,8 @@ class PyBuildExt(build_ext):
+@@ -361,11 +360,8 @@
          # lib_dirs and inc_dirs are used to search for files;
          # if a file is found in one of those directories, it can
          # be assumed that no additional -I,-L directives are needed.
@@ -41,10 +38,10 @@ Index: Python-2.6.6/setup.py
          exts = []
          missing = []
  
-@@ -661,8 +658,7 @@ class PyBuildExt(build_ext):
-                 pass # Issue 7384: Already linked against curses or tinfo.
-             elif curses_library:
-                 readline_libs.append(curses_library)
+@@ -583,12 +579,10 @@
+                 readline_libs.append('ncurses')
+             elif self.compiler.find_library_file(lib_dirs, 'curses'):
+                 readline_libs.append('curses')
 -            elif self.compiler.find_library_file(lib_dirs +
 -                                               ['/usr/lib/termcap'],
 +            elif self.compiler.find_library_file(lib_dirs,

@@ -8,7 +8,8 @@ SRC_URI = "\
   file://10-distutils-fix-swig-parameter.patch;patch=1 \
   file://11-distutils-never-modify-shebang-line.patch;patch=1 \
   file://12-distutils-prefix-is-inside-staging-area.patch;patch=1 \
-  file://nohostlibs.patch \
+  file://nohostlibs.patch;patch=1 \
+  file://fix-regen-execution.patch;patch=1 \
 "
 S = "${WORKDIR}/Python-${PV}"
 
