@@ -32,7 +32,7 @@ SRC_URI_append_arm = " file://atomic-thumb.patch"
 SRC_URI_append_armv6 = " file://gatomic_armv6.patch"
 SRC_URI_append_armv7a = " file://gatomic_armv6.patch"
 
-inherit autotools gettext
+inherit autotools pkgconfig gettext 
 
 S = "${WORKDIR}/glib-${PV}"
 
