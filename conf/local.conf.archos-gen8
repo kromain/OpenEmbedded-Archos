@@ -120,6 +120,8 @@ ASSUME_PROVIDED += "help2man-native"
 # target filesystems need somewhat recent header files.
 ASSUME_PROVIDED += "linux-libc-headers-native"
 
+ASSUME_PROVIDED += "perl-native libxml-parser-perl-native"
+
 # Select between multiple alternative providers, if more than one is eligible.
 PREFERRED_PROVIDERS = "virtual/qte:qte virtual/libqpe:libqpe-opie"
 PREFERRED_PROVIDERS += " virtual/libsdl:libsdl-x11"
