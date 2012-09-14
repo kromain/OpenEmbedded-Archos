@@ -1,0 +1,45 @@
+From 46706d39145fa058e73f17db5e57d182d3d3a28d Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Thu, 13 Sep 2012 16:39:45 -0700
+Subject: [PATCH] Fix rpath dirs for modules
+
+It was incorrect twice:
+- when generating the forwarding .pri, we want the raw QT_INSTALL_LIBS
+  without the sysroot path
+- when accessing the module settings, the wrong variable was used
+
+Change-Id: Ic0061b58ed9deaed20c98c3f78f617d054a79a8f
+---
+ mkspecs/features/qt_functions.prf     |    2 +-
+ mkspecs/features/qt_module_fwdpri.prf |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/../qt5-src/qtbase/mkspecs/features/qt_functions.prf b/../qt5-src/qtbase/mkspecs/features/qt_functions.prf
+index 3b1a8d2..427f705 100644
+--- a/../qt5-src/qtbase/mkspecs/features/qt_functions.prf
++++ b/../qt5-src/qtbase/mkspecs/features/qt_functions.prf
+@@ -89,7 +89,7 @@ defineTest(qtAddModule) {
+        LINKAGE += $$lib
+ 
+        contains(QT_CONFIG, rpath) {
+-           rpath = $$eval(QT.$${MODULE}.rpath)
++           rpath = $$eval(QT.$${1}.rpath)
+            isEmpty(rpath): rpath = $$MODULE_LIBS
+            QMAKE_RPATHDIR *= $$rpath
+        }
+diff --git a/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf b/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
+index d400d27..5dc63eb 100644
+--- a/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
++++ b/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
+@@ -11,7 +11,7 @@
+     # Permit modules to enforce being built outside QTDIR.
+     force_independent: mod_component_base = $$MODULE_BASE_OUTDIR
+ 
+-    isEmpty(MODULE_INSTALL_LIBS): MODULE_INSTALL_LIBS = $$[QT_INSTALL_LIBS]
++    isEmpty(MODULE_INSTALL_LIBS): MODULE_INSTALL_LIBS = $$[QT_INSTALL_LIBS/raw]
+ 
+     MODULE_FWD_PRI = $$mod_qmake_base/mkspecs/modules/qt_$${MODULE}.pri
+ 
+-- 
+1.7.9.5
+

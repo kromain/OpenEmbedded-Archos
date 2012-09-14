@@ -1,0 +1,26 @@
+From fc940dc6cdfdd93a34d0cd0c1f97da0d63006505 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Thu, 13 Sep 2012 17:08:11 -0700
+Subject: [PATCH] add missing glchar definition
+
+Change-Id: Ia2b31aa0de180f4780400e97589b57c2f11c68f7
+---
+ src/gui/opengl/qopengl.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/../qt5-src/qtbase/src/gui/opengl/qopengl.h b/../qt5-src/qtbase/src/gui/opengl/qopengl.h
+index 809b821..e24b70d 100644
+--- a/../qt5-src/qtbase/src/gui/opengl/qopengl.h
++++ b/../qt5-src/qtbase/src/gui/opengl/qopengl.h
+@@ -54,6 +54,8 @@ QT_BEGIN_HEADER
+ # else
+ #  include <GLES2/gl2.h>
+ # endif
++// PVR provides an outdated gl2.h which misses the GLchar typedef
++typedef char GLchar;
+ # include "qopengles2ext.h"
+ # ifndef GL_DOUBLE
+ #  define GL_DOUBLE GL_FLOAT
+-- 
+1.7.9.5
+
