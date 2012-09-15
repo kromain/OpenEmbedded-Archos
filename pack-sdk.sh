@@ -45,5 +45,6 @@ cp scripts/setup-sdk.sh $SDKDIR
 echo "Packing up SDK into $SDKNAME.tar.gz..."
 
 tar cz -C $OEBUILDDIR -f $OEBUILDDIR/$SDKNAME.tar.gz $SDKNAME
+rm -rf $SDKNAME
 
 echo "...Done!"
