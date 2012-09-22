@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "GPL LGPL"
 PR = "r1"
 
-DEPENDS += " freetype dbus openssl "
+DEPENDS += " freetype dbus openssl libgles-omap3"
 
 SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
 	  file://0003-Added-the-minimal-set-of-QPA-plugins-to-build-on-Lin.patch;patch=1 \
