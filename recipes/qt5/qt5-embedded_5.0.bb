@@ -24,10 +24,9 @@ QT_VERSION = 5.0.0
 ########################
 
 SRC_URI = "file://src \
-		file://add-missing-glchar-definition.patch;patch=1 \
 		file://fix-GCC-bug-with-hidden-inlined-symbols.patch;patch=1 \
-		file://fix-gstreamer-plugin-build-for-platforms-with-qreal-.patch;patch=1 \
 		file://fix-rpath-dirs-for-modules.patch;patch=1 \
+		file://define-the-module-rpath-in-the-installed-prf-file.patch;patch=1 \
 		"
 S = "${WORKDIR}/src/qt5-build"
 

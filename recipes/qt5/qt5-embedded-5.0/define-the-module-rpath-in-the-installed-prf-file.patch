@@ -1,0 +1,63 @@
+From 39f601b68281cd14a1ef6dea5978702309af6e75 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@kdab.com>
+Date: Sat, 15 Sep 2012 03:30:28 -0700
+Subject: [PATCH] Define the module rpath in the installed qt_*.prf file
+
+Putting the setting in the installed .pri rather than the forwarding one
+allows the setting to be available after installation.
+
+Change-Id: I6f2bd6e36889be2f61e17a579174380aa3c6622d
+---
+ mkspecs/features/qt_config.prf        |    1 +
+ mkspecs/features/qt_module.prf        |    1 +
+ mkspecs/features/qt_module_fwdpri.prf |    3 ---
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/../qt5-src/qtbase/mkspecs/features/qt_config.prf b/../qt5-src/qtbase/mkspecs/features/qt_config.prf
+index 305ff1c..dd4227b 100644
+--- a/../qt5-src/qtbase/mkspecs/features/qt_config.prf
++++ b/../qt5-src/qtbase/mkspecs/features/qt_config.prf
+@@ -21,6 +21,7 @@ QMAKE_QT_CONFIG = $$[QT_HOST_DATA/get]/mkspecs/qconfig.pri
+          QT_MODULE_PLUGIN_BASE = $$[QT_INSTALL_PLUGINS]
+          QT_MODULE_BIN_BASE = $$[QT_INSTALL_BINS]
+          QT_MODULE_IMPORT_BASE = $$[QT_INSTALL_IMPORTS]
++         QT_MODULE_RPATH_BASE = $$[QT_INSTALL_LIBS/raw]
+          include($$mod)
+       }
+    }
+diff --git a/../qt5-src/qtbase/mkspecs/features/qt_module.prf b/../qt5-src/qtbase/mkspecs/features/qt_module.prf
+index 37d74b9..7178e41 100644
+--- a/../qt5-src/qtbase/mkspecs/features/qt_module.prf
++++ b/../qt5-src/qtbase/mkspecs/features/qt_module.prf
+@@ -90,6 +90,7 @@ MODULE_PRI = $$MODULE_QMAKE_OUTDIR/mkspecs/modules-inst/qt_$${MODULE}.pri
+         "QT.$${MODULE}.plugins = \$\$QT_MODULE_PLUGIN_BASE" \
+         "QT.$${MODULE}.imports = \$\$QT_MODULE_IMPORT_BASE$$MODULE_IMPORT_SUFFIX" \
+         "QT.$${MODULE}.depends =$$join(MODULE_DEPENDS, " ", " ")" \
++        "QT.$${MODULE}.rpath = \$\$QT_MODULE_RPATH_BASE" \
+         $$module_privdep \
+         $$module_build_type \
+         $$module_config \
+diff --git a/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf b/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
+index 5dc63eb..971ebd8 100644
+--- a/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
++++ b/../qt5-src/qtbase/mkspecs/features/qt_module_fwdpri.prf
+@@ -11,8 +11,6 @@
+     # Permit modules to enforce being built outside QTDIR.
+     force_independent: mod_component_base = $$MODULE_BASE_OUTDIR
+ 
+-    isEmpty(MODULE_INSTALL_LIBS): MODULE_INSTALL_LIBS = $$[QT_INSTALL_LIBS/raw]
+-
+     MODULE_FWD_PRI = $$mod_qmake_base/mkspecs/modules/qt_$${MODULE}.pri
+ 
+     # -rpath-link is used by the linker to find depedencies of dynamic
+@@ -70,7 +68,6 @@
+         "QT_MODULE_PLUGIN_BASE = $$mod_component_base/plugins" \
+         $$module_rpathlink \
+         $$module_rpathlink_priv \
+-        "QT.$${MODULE}.rpath = $$MODULE_INSTALL_LIBS" \
+         "QT.$${MODULE}.plugin_path = $$val_escape(pluginpath)" \
+         "include($$MODULE_PRI)"
+     write_file($$MODULE_FWD_PRI, MODULE_FWD_PRI_CONT)|error("Aborting.")
+-- 
+1.7.9.5
+
